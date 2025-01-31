@@ -1,22 +1,20 @@
 import { Link } from "react-router-dom";
 import { AuthToken, FakeData, Status, User } from "tweeter-shared";
-import { useContext } from "react";
-import { UserInfoContext } from "../userInfo/UserInfoProvider";
 import useToastListener from "../toaster/ToastListenerHook";
 import Post from "./Post";
-
-
+import useUserInfo from "../userInfo/UserInfoHook";
 
 interface Props {
   status: Status;
 }
 
 const StatusItem = (props: Props) => {
+  const { displayErrorMessage } = useToastListener();
   const { displayedUser, setDisplayedUser, currentUser, authToken } =
-    useContext(UserInfoContext);
+    useUserInfo();
+
   const navigateToUser = async (event: React.MouseEvent): Promise<void> => {
     event.preventDefault();
-  const { displayErrorMessage } = useToastListener();
 
     try {
       const alias = extractAlias(event.target.toString());
@@ -48,40 +46,39 @@ const StatusItem = (props: Props) => {
     return FakeData.instance.findUserByAlias(alias);
   };
 
-  return(
+  return (
     <div className="col bg-light mx-0 px-0">
-    <div className="container px-0">
-      <div className="row mx-0 px-0">
-        <div className="col-auto p-3">
-          <img
-            src={props.status.user.imageUrl}
-            className="img-fluid"
-            width="80"
-            alt="Posting user"
-          />
-        </div>
-        <div className="col">
-          <h2>
-            <b>
-              {props.status.user.firstName} {props.status.user.lastName}
-            </b>{" "}
-            -{" "}
-            <Link
-              to={props.status.user.alias}
-              onClick={(event) => navigateToUser(event)}
-            >
-              {props.status.user.alias}
-            </Link>
-          </h2>
-          {props.status.formattedDate}
-          <br />
-          <Post status={props.status} />
+      <div className="container px-0">
+        <div className="row mx-0 px-0">
+          <div className="col-auto p-3">
+            <img
+              src={props.status.user.imageUrl}
+              className="img-fluid"
+              width="80"
+              alt="Posting user"
+            />
+          </div>
+          <div className="col">
+            <h2>
+              <b>
+                {props.status.user.firstName} {props.status.user.lastName}
+              </b>{" "}
+              -{" "}
+              <Link
+                to={props.status.user.alias}
+                onClick={(event) => navigateToUser(event)}
+              >
+                {props.status.user.alias}
+              </Link>
+            </h2>
+            {props.status.formattedDate}
+            <br />
+            <Post status={props.status} />
+          </div>
         </div>
       </div>
     </div>
-  </div>
   );
-
 };
 
 export default StatusItem;
