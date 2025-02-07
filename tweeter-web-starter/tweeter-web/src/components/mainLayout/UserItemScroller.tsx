@@ -1,8 +1,8 @@
 import { User } from "tweeter-shared";
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
-import UserItem from "../userItem/UserItem";
 import useToastListener from "../toaster/ToastListenerHook";
+import UserItem from "../userItem/UserItem";
 import useUserInfo from "../userInfo/UserInfoHook";
 import {
   UserItemPresenter,
