@@ -19,18 +19,18 @@ export class PostStatusPresenter {
   public get isLoading() {
     return this._isLoading;
   }
+
   protected set isLoading(value: boolean) {
     this._isLoading = value;
   }
+
   public async submitPost(
     authToken: AuthToken,
     currentUser: User,
     post: string
   ) {
     try {
-      //   setIsLoading(true);
       this._isLoading = true;
-
       this._view.displayInfoMessage("Posting status...", 0);
 
       const status = new Status(post, currentUser!, Date.now());
@@ -55,7 +55,6 @@ export class PostStatusPresenter {
   ): Promise<void> {
     // Pause so we can see the logging out message. Remove when connected to the server
     await new Promise((f) => setTimeout(f, 2000));
-
     // TODO: Call the server to post the status
   }
 }
