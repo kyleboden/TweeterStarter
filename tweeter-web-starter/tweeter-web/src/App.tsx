@@ -11,7 +11,6 @@ import Register from "./components/authentication/register/Register";
 import MainLayout from "./components/mainLayout/MainLayout";
 import Toaster from "./components/toaster/Toaster";
 
-import { AuthToken, FakeData, Status } from "tweeter-shared";
 import UserItemScroller from "./components/mainLayout/UserItemScroller";
 import StatusItemScroller from "./components/mainLayout/StatusItemScroller";
 import useUserInfo from "./components/userInfo/UserInfoHook";
@@ -22,6 +21,10 @@ import { StatusItemView } from "./presenters/StatusItemPresenter";
 import { StoryPresenter } from "./presenters/StoryPresenter";
 import { FeedPresenter } from "./presenters/FeedPresenter";
 import { LoginPresenter, LoginView } from "./presenters/LoginPresenter";
+import {
+  RegisterPresenter,
+  RegisterView,
+} from "./presenters/RegisterPresenter";
 
 const App = () => {
   const { currentUser, authToken } = useUserInfo();
@@ -113,7 +116,16 @@ const UnauthenticatedRoutes = () => {
           />
         }
       />
-      <Route path="/register" element={<Register />} />
+      <Route
+        path="/register"
+        element={
+          <Register
+            presenterGenerator={(view: RegisterView) =>
+              new RegisterPresenter(view)
+            }
+          />
+        }
+      />
       <Route
         path="*"
         element={
