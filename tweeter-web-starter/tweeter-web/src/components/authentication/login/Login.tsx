@@ -42,41 +42,6 @@ const Login = (props: Props) => {
     }
   };
 
-  // const doLogin = async () => {
-  //   try {
-  //     setIsLoading(true);
-
-  //     const [user, authToken] = await login(alias, password);
-
-  //     updateUserInfo(user, user, authToken, rememberMe);
-
-  //     if (!!props.originalUrl) {
-  //       navigate(props.originalUrl);
-  //     } else {
-  //       navigate("/");
-  //     }
-  //   } catch (error) {
-  //     displayErrorMessage(
-  //       `Failed to log user in because of exception: ${error}`
-  //     );
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // const login = async (
-  //   alias: string,
-  //   password: string
-  // ): Promise<[User, AuthToken]> => {
-  //   // TODO: Replace with the result of calling the server
-  //   const user = FakeData.instance.firstUser;
-
-  //   if (user === null) {
-  //     throw new Error("Invalid alias or password");
-  //   }
-
-  //   return [user, FakeData.instance.authToken];
-  // };
   const doLogin = () =>
     presenter.doLogin(alias, password, rememberMe, props.originalUrl!);
 

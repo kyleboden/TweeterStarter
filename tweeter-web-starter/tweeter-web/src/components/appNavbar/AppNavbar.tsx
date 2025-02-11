@@ -27,25 +27,6 @@ const AppNavbar = (props: Props) => {
 
   const [presenter] = useState(props.presenterGenerator(listener));
 
-  // const logOut = async () => {
-  //   displayInfoMessage("Logging Out...", 0);
-
-  //   try {
-  //     await logout(authToken!);
-
-  //     clearLastInfoMessage();
-  //     clearUserInfo();
-  //   } catch (error) {
-  //     displayErrorMessage(
-  //       `Failed to log user out because of exception: ${error}`
-  //     );
-  //   }
-  // };
-
-  // const logout = async (authToken: AuthToken): Promise<void> => {
-  //   // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-  //   await new Promise((res) => setTimeout(res, 1000));
-  // };
   const logOut = () => presenter.logOut(authToken!);
 
   return (
