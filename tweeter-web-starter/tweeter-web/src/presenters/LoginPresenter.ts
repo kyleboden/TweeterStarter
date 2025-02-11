@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
-import { User, AuthToken, FakeData } from "tweeter-shared";
+import { User, AuthToken} from "tweeter-shared";
 import { UserService } from "../model/UserService";
 
 export interface LoginView {

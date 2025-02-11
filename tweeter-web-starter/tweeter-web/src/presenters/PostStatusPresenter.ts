@@ -1,4 +1,5 @@
 import { AuthToken, Status, User } from "tweeter-shared";
+import { StatusService } from "../model/StatusService";
 
 export interface PostStatusView {
   displayInfoMessage: (message: string, duration: number) => void;
@@ -9,11 +10,13 @@ export interface PostStatusView {
 
 export class PostStatusPresenter {
   private _isLoading = false;
+  private statusService: StatusService;
 
   private _view: PostStatusView;
 
   public constructor(view: PostStatusView) {
     this._view = view;
+    this.statusService = new StatusService();
   }
 
   public get isLoading() {
@@ -35,7 +38,7 @@ export class PostStatusPresenter {
 
       const status = new Status(post, currentUser!, Date.now());
 
-      await this.postStatus(authToken!, status);
+      await this.statusService.postStatus(authToken!, status);
 
       this._view.setPost("");
       this._view.displayInfoMessage("Status posted!", 2000);
@@ -47,14 +50,5 @@ export class PostStatusPresenter {
       this._view.clearLastInfoMessage();
       this._isLoading = false;
     }
-  }
-
-  public async postStatus(
-    authToken: AuthToken,
-    newStatus: Status
-  ): Promise<void> {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
-    // TODO: Call the server to post the status
   }
 }
