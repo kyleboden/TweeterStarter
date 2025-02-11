@@ -11,11 +11,14 @@ import {
   UserInfoPresenter,
   UserInfoView,
 } from "../../presenters/UserInfoPresenter";
+import { LogoutPresenter, LogoutView } from "../../presenters/LogoutPresenter";
 
 const MainLayout = () => {
   return (
     <>
-      <AppNavbar />
+      <AppNavbar
+        presenterGenerator={(view: LogoutView) => new LogoutPresenter(view)}
+      />
       <div className="container mx-auto px-3 w-100">
         <div className="row gx-4">
           <div className="col-4">
