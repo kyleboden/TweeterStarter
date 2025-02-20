@@ -1,9 +1,25 @@
+import { User, AuthToken } from "tweeter-shared";
 import { UserService } from "../model/UserService";
-import { AuthView, Presenter } from "./Presenter";
+import { AuthPresenter } from "./AuthPresenter";
+import { AuthView } from "./Presenter";
 
 // export interface LoginView extends AuthView {}
 
-export class LoginPresenter extends Presenter<AuthView> {
+export class LoginPresenter extends AuthPresenter<AuthView> {
+  protected serviceCall(
+    alias: string,
+    password: string
+  ): Promise<[User, AuthToken]> {
+    return this._userService.login(alias, password);
+  }
+  protected navigateCall(ogURL: string): void {
+    if (!!ogURL) {
+      this._view.navigate(ogURL);
+    } else {
+      this._view.navigate("/");
+    }
+  }
+
   private _userService: UserService;
 
   public constructor(view: AuthView) {
@@ -17,24 +33,11 @@ export class LoginPresenter extends Presenter<AuthView> {
     rememberMe: boolean,
     ogURL: string
   ) {
-    try {
-      this._view.setIsLoading(true);
-
-      const [user, authToken] = await this._userService.login(alias, password);
-
-      this._view.updateUserInfo(user, user, authToken, rememberMe);
-
-      if (!!ogURL) {
-        this._view.navigate(ogURL);
-      } else {
-        this._view.navigate("/");
-      }
-    } catch (error) {
-      this._view.displayErrorMessage(
-        `Failed to log user in because of exception: ${error}`
-      );
-    } finally {
-      this._view.setIsLoading(false);
-    }
+    this.doAuth(
+      rememberMe,
+      () => this.serviceCall(alias, password),
+      () => this.navigateCall(ogURL),
+      "login"
+    );
   }
 }
