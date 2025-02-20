@@ -11,7 +11,7 @@ import { LoginPresenter, LoginView } from "../../../presenters/LoginPresenter";
 
 interface Props {
   originalUrl?: string;
-  presenterGenerator: (view: LoginView) => LoginPresenter;
+  // presenterGenerator: (view: LoginView) => LoginPresenter;
 }
 
 const Login = (props: Props) => {
@@ -30,7 +30,8 @@ const Login = (props: Props) => {
     updateUserInfo: updateUserInfo,
     navigate: navigate,
   };
-  const [presenter] = useState(props.presenterGenerator(listener));
+  // const [presenter] = useState(props.presenterGenerator(listener));
+  const [presenter] = useState(new LoginPresenter(listener));
 
   const checkSubmitButtonStatus = (): boolean => {
     return !alias || !password;

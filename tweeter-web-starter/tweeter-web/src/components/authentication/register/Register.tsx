@@ -11,11 +11,8 @@ import {
   RegisterView,
 } from "../../../presenters/RegisterPresenter";
 
-interface Props {
-  presenterGenerator: (view: RegisterView) => RegisterPresenter;
-}
 
-const Register = (props: Props) => {
+const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [alias, setAlias] = useState("");
@@ -40,7 +37,7 @@ const Register = (props: Props) => {
     navigate: navigate,
   };
 
-  const [presenter] = useState(props.presenterGenerator(listener));
+const [presenter] = useState(new RegisterPresenter(listener));
 
   const checkSubmitButtonStatus = (): boolean => {
     return (

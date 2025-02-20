@@ -1,10 +1,9 @@
 import { NavigateFunction } from "react-router-dom";
 import { User, AuthToken} from "tweeter-shared";
 import { UserService } from "../model/UserService";
+import { AuthView, Presenter, View } from "./Presenter";
 
-export interface LoginView {
-  displayErrorMessage: (message: string) => void;
-
+export interface LoginView extends AuthView{
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   updateUserInfo: (
     currentUser: User,
@@ -15,12 +14,11 @@ export interface LoginView {
   navigate: NavigateFunction;
 }
 
-export class LoginPresenter {
-  private _view: LoginView;
+export class LoginPresenter extends Presenter<LoginView>{
   private _userService: UserService;
 
   public constructor(view: LoginView) {
-    this._view = view;
+    super(view);
     this._userService = new UserService();
   }
 

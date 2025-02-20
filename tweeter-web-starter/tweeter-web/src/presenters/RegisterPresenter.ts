@@ -2,9 +2,9 @@ import { Buffer } from "buffer";
 import { UserService } from "../model/UserService";
 import { User, AuthToken } from "tweeter-shared";
 import { NavigateFunction } from "react-router-dom";
+import { Presenter, View } from "./Presenter";
 
-export interface RegisterView {
-  displayErrorMessage: (message: string) => void;
+export interface RegisterView extends View{
 
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   setImageBytes: React.Dispatch<React.SetStateAction<Uint8Array>>;
@@ -20,12 +20,11 @@ export interface RegisterView {
   navigate: NavigateFunction;
 }
 
-export class RegisterPresenter {
-  private _view: RegisterView;
+export class RegisterPresenter extends Presenter<RegisterView>{
   private _userService: UserService;
 
   public constructor(view: RegisterView) {
-    this._view = view;
+    super(view);
     this._userService = new UserService();
   }
 
