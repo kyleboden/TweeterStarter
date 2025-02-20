@@ -1,23 +1,19 @@
 import { AuthToken, User } from "tweeter-shared";
 import { UserService } from "../model/UserService";
+import { MessageView, Presenter } from "./Presenter";
 
-export interface UserInfoView {
-  displayErrorMessage: (message: string) => void;
-  displayInfoMessage: (message: string, duration: number) => void;
-  clearLastInfoMessage: () => void;
-
+export interface UserInfoView extends MessageView{
   setIsFollower: React.Dispatch<React.SetStateAction<boolean>>;
   setFolloweeCount: React.Dispatch<React.SetStateAction<number>>;
   setFollowerCount: React.Dispatch<React.SetStateAction<number>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export class UserInfoPresenter {
-  private _view: UserInfoView;
+export class UserInfoPresenter extends Presenter<UserInfoView>{
   private _userService: UserService;
 
   public constructor(view: UserInfoView) {
-    this._view = view;
+    super(view);
     this._userService = new UserService();
   }
 

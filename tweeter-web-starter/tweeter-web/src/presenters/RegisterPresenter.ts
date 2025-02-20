@@ -1,26 +1,14 @@
 import { Buffer } from "buffer";
 import { UserService } from "../model/UserService";
-import { User, AuthToken } from "tweeter-shared";
-import { NavigateFunction } from "react-router-dom";
-import { Presenter, View } from "./Presenter";
+import { AuthView, Presenter } from "./Presenter";
 
-export interface RegisterView extends View{
-
+export interface RegisterView extends AuthView {
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   setImageBytes: React.Dispatch<React.SetStateAction<Uint8Array>>;
-
   setImageFileExtension: React.Dispatch<React.SetStateAction<string>>;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  updateUserInfo: (
-    currentUser: User,
-    displayedUser: User | null,
-    authToken: AuthToken,
-    remember: boolean
-  ) => void;
-  navigate: NavigateFunction;
 }
 
-export class RegisterPresenter extends Presenter<RegisterView>{
+export class RegisterPresenter extends Presenter<RegisterView> {
   private _userService: UserService;
 
   public constructor(view: RegisterView) {
