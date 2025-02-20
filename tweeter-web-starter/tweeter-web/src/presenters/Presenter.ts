@@ -32,7 +32,7 @@ export class Presenter<V extends View> {
     this._view = view;
   }
 
-  protected get view() {
+  protected get view(): V {
     return this._view;
   }
 
