@@ -3,14 +3,6 @@ import { Outlet } from "react-router-dom";
 import AppNavbar from "../appNavbar/AppNavbar";
 import PostStatus from "../postStatus/PostStatus";
 import UserInfo from "../userInfo/UserInfo";
-import {
-  PostStatusPresenter,
-  PostStatusView,
-} from "../../presenters/PostStatusPresenter";
-import {
-  UserInfoPresenter,
-  UserInfoView,
-} from "../../presenters/UserInfoPresenter";
 import { LogoutPresenter, LogoutView } from "../../presenters/LogoutPresenter";
 
 const MainLayout = () => {
