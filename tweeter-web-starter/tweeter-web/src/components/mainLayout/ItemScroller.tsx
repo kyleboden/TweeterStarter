@@ -1,22 +1,20 @@
-import { User } from "tweeter-shared";
+import { Status, User } from "tweeter-shared";
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import useToastListener from "../toaster/ToastListenerHook";
-import UserItem from "../userItem/UserItem";
 import useUserInfo from "../userInfo/UserInfoHook";
-import {
-  UserItemPresenter,
-  UserItemView,
-} from "../../presenters/UserItemPresenter";
+import { ItemView } from "../../presenters/Presenter";
+import { PagedItemPresenter } from "../../presenters/PagedItemPresenter";
 
-interface Props {
-  presenterGenerator: (view: UserItemView) => UserItemPresenter;
+interface Props<I extends Status | User, S> {
+  presenterGenerator: (view: ItemView<I>) => PagedItemPresenter<I, S>;
+  itemComponentGenerator: (item: I) => JSX.Element;
 }
 
-const UserItemScroller = (props: Props) => {
+const ItemScroller = <I extends Status | User, S>(props: Props<I, S>) => {
   const { displayErrorMessage } = useToastListener();
-  const [items, setItems] = useState<User[]>([]);
-  const [newItems, setNewItems] = useState<User[]>([]);
+  const [items, setItems] = useState<I[]>([]);
+  const [newItems, setNewItems] = useState<I[]>([]);
   const [changedDisplayedUser, setChangedDisplayedUser] = useState(true);
   const { displayedUser, authToken } = useUserInfo();
 
@@ -46,8 +44,8 @@ const UserItemScroller = (props: Props) => {
     presenter.reset();
   };
 
-  const listener: UserItemView = {
-    addItems: (newItems: User[]) => setNewItems(newItems),
+  const listener: ItemView<I> = {
+    addItems: (newItems: I[]) => setNewItems(newItems),
     displayErrorMessage: displayErrorMessage,
   };
 
@@ -72,7 +70,8 @@ const UserItemScroller = (props: Props) => {
             key={index}
             className="row mb-3 mx-0 px-0 border rounded bg-white"
           >
-            <UserItem value={item} />
+            {/* <StatusItem status={item} /> */}
+            {props.itemComponentGenerator(item)}
           </div>
         ))}
       </InfiniteScroll>
@@ -80,4 +79,4 @@ const UserItemScroller = (props: Props) => {
   );
 };
 
-export default UserItemScroller;
+export default ItemScroller;
