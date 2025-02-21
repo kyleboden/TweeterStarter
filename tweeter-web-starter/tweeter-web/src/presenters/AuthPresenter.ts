@@ -1,7 +1,15 @@
 import { AuthToken, User } from "tweeter-shared";
-import { AuthView, Presenter, View } from "./Presenter";
+import { AuthView, Presenter } from "./Presenter";
+import { UserService } from "../model/UserService";
 
 export abstract class AuthPresenter<T extends AuthView> extends Presenter<T> {
+  protected _userService: UserService;
+
+  protected constructor(view: T) {
+    super(view);
+    this._userService = new UserService();
+  }
+
   public async doAuth(
     rememberMe: boolean,
     serviceCall: () => Promise<[User, AuthToken]>,

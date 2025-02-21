@@ -1,5 +1,4 @@
 import { User, AuthToken } from "tweeter-shared";
-import { UserService } from "../model/UserService";
 import { AuthPresenter } from "./AuthPresenter";
 import { AuthView } from "./Presenter";
 
@@ -20,11 +19,8 @@ export class LoginPresenter extends AuthPresenter<AuthView> {
     }
   }
 
-  private _userService: UserService;
-
   public constructor(view: AuthView) {
     super(view);
-    this._userService = new UserService();
   }
 
   public async doLogin(

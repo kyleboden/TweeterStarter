@@ -11,11 +11,8 @@ export interface RegisterView extends AuthView {
 }
 
 export class RegisterPresenter extends AuthPresenter<RegisterView> {
-  private _userService: UserService;
-
   public constructor(view: RegisterView) {
     super(view);
-    this._userService = new UserService();
   }
 
   protected async serviceCall(
