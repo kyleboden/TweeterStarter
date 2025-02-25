@@ -8,11 +8,15 @@ export interface PostStatusView extends MessageView {
 
 export class PostStatusPresenter extends Presenter<PostStatusView> {
   private _isLoading = false;
-  private statusService: StatusService;
+  private _statusService: StatusService;
 
   public constructor(view: PostStatusView) {
     super(view);
-    this.statusService = new StatusService();
+    this._statusService = new StatusService();
+  }
+
+  public get statusService() {
+    return this._statusService;
   }
 
   public get isLoading() {
@@ -40,7 +44,9 @@ export class PostStatusPresenter extends Presenter<PostStatusView> {
       this._view.displayInfoMessage("Status posted!", 2000);
     } catch (error) {
       this._view.displayErrorMessage(
-        `Failed to post the status because of exception: ${error}`
+        `Failed to post the status because of exception: ${
+          (error as Error).message
+        }`
       );
     } finally {
       this._view.clearLastInfoMessage();
