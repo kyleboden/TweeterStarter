@@ -4,14 +4,10 @@ import { MemoryRouter } from "react-router-dom";
 import React from "react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
-// import { library } from "@fortawesome/fontawesome-svg-core";
-// import { fab } from "@fortawesome/free-brands-svg-icons";
 import { instance, mock, verify } from "@typestrong/ts-mockito";
 import { PostStatusPresenter } from "../../../src/presenters/PostStatusPresenter";
 import { AuthToken, User } from "tweeter-shared";
 import useUserInfo from "../../../src/components/userInfo/UserInfoHook";
-
-// library.add(fab);
 
 jest.mock("../../../src/components/userInfo/UserInfoHook", () => ({
   ...jest.requireActual("../../../src/components/userInfo/UserInfoHook"),
@@ -21,21 +17,15 @@ jest.mock("../../../src/components/userInfo/UserInfoHook", () => ({
 
 describe("Post Status Component", () => {
   const mockUser = mock<User>();
-
   let mockUserInstance: User;
-
   const mockAuthToken = mock<AuthToken>();
-
   let mockAuthTokenInstance: AuthToken;
 
   beforeAll(() => {
     mockUserInstance = instance(mockUser);
-
     mockAuthTokenInstance = instance(mockAuthToken);
-
     (useUserInfo as jest.Mock).mockReturnValue({
       currentUser: mockUserInstance,
-
       authToken: mockAuthTokenInstance,
     });
   });
@@ -110,8 +100,3 @@ const renderPostStatusAndGetElements = (presenter?: PostStatusPresenter) => {
 
   return { postStatusButton, clearStatusButton, postField, user };
 };
-
-// When first rendered the Post Status and Clear buttons are both disabled.
-// Both buttons are enabled when the text field has text.
-// Both buttons are disabled when the text field is cleared.
-// The presenter's postStatus method is called with correct parameters when the Post Status button is pressed.
