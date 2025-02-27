@@ -4,10 +4,20 @@ import { UserService } from "../model/UserService";
 
 export abstract class AuthPresenter<T extends AuthView> extends Presenter<T> {
   protected _userService: UserService;
+  protected _rememberMe: boolean;
 
   protected constructor(view: T) {
     super(view);
     this._userService = new UserService();
+    this._rememberMe = false;
+  }
+
+  public getRememberMe(): boolean {
+    return this._rememberMe;
+  }
+
+  public setRememberMe(rememberMe: boolean): void {
+    this._rememberMe = rememberMe;
   }
 
   public async doAuth(

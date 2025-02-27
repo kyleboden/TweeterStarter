@@ -49,19 +49,17 @@ describe("Login Component", () => {
     const originalUrl = "http://someurl.com";
     const alias = "@someAlias";
     const password = "myPassword";
-    const rememberMe = false;
+    // const rememberMe = false;
 
     const { signInButton, aliasField, passwordField, user } =
-      renderLoginAndGetElements("/", mockPresenterInstance);
+      renderLoginAndGetElements(originalUrl, mockPresenterInstance);
 
     await user.type(aliasField, alias);
     await user.type(passwordField, password);
 
     await user.click(signInButton);
 
-    verify(
-      mockPresenter.doLogin(alias, password, rememberMe, originalUrl)
-    ).once();
+    verify(mockPresenter.doLogin(alias, password, originalUrl)).once();
   });
 });
 

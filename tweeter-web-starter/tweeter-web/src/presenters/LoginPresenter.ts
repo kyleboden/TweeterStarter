@@ -2,8 +2,6 @@ import { User, AuthToken } from "tweeter-shared";
 import { AuthPresenter } from "./AuthPresenter";
 import { AuthView } from "./Presenter";
 
-// export interface LoginView extends AuthView {}
-
 export class LoginPresenter extends AuthPresenter<AuthView> {
   protected serviceCall(
     alias: string,
@@ -23,14 +21,9 @@ export class LoginPresenter extends AuthPresenter<AuthView> {
     super(view);
   }
 
-  public async doLogin(
-    alias: string,
-    password: string,
-    rememberMe: boolean,
-    ogURL: string
-  ) {
+  public async doLogin(alias: string, password: string, ogURL: string) {
     this.doAuth(
-      rememberMe,
+      this._rememberMe,
       () => this.serviceCall(alias, password),
       () => this.navigateCall(ogURL),
       "login"

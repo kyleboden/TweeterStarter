@@ -79,11 +79,10 @@ export class RegisterPresenter extends AuthPresenter<RegisterView> {
     alias: string,
     password: string,
     imageBytes: Uint8Array,
-    imageFileExtension: string,
-    rememberMe: boolean
+    imageFileExtension: string
   ) {
     this.doAuth(
-      rememberMe,
+      this._rememberMe,
       () =>
         this.serviceCall(
           firstName,

@@ -20,7 +20,7 @@ const Register = () => {
   const [imageBytes, setImageBytes] = useState<Uint8Array>(new Uint8Array());
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageFileExtension, setImageFileExtension] = useState<string>("");
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -69,7 +69,6 @@ const [presenter] = useState(new RegisterPresenter(listener));
       password,
       imageBytes,
       imageFileExtension,
-      rememberMe
     );
 
   const inputFieldGenerator = () => {
@@ -136,7 +135,7 @@ const [presenter] = useState(new RegisterPresenter(listener));
       oAuthHeading="Register with:"
       inputFieldGenerator={inputFieldGenerator}
       switchAuthenticationMethodGenerator={switchAuthenticationMethodGenerator}
-      setRememberMe={setRememberMe}
+      setRememberMe={(checked) => presenter.setRememberMe(checked)}
       submitButtonDisabled={checkSubmitButtonStatus}
       isLoading={isLoading}
       submit={doRegister}
