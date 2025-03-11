@@ -70,7 +70,7 @@ const AuthenticatedRoutes = () => {
             <ItemScroller<Status, StatusService>
               key={"story"}
               presenterGenerator={(view: ItemView<Status>) =>
-                new StoryPresenter(view)
+                new StoryPresenter (view)
               }
               itemComponentGenerator={(Status) => (
                 <StatusItem status={Status} />
