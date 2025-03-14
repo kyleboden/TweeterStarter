@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# use set -e to terminate the script on error
+# use se./ -e to terminate the script on error
 set -e
 
 source .server

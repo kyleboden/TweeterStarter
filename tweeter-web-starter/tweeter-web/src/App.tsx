@@ -17,11 +17,11 @@ import { FollowerPresenter } from "./presenters/FollowerPresenter";
 import { StoryPresenter } from "./presenters/StoryPresenter";
 import { FeedPresenter } from "./presenters/FeedPresenter";
 import ItemScroller from "./components/mainLayout/ItemScroller";
-import { StatusService } from "./model/StatusService";
+import { StatusService } from "./model/service/StatusService";
 import { Status, User } from "tweeter-shared";
 import StatusItem from "./components/statusItem/StatusItem";
 import UserItem from "./components/userItem/UserItem";
-import { FollowService } from "./model/FollowService";
+import { FollowService } from "./model/service/FollowService";
 import { ItemView } from "./presenters/Presenter";
 
 const App = () => {
@@ -70,7 +70,7 @@ const AuthenticatedRoutes = () => {
             <ItemScroller<Status, StatusService>
               key={"story"}
               presenterGenerator={(view: ItemView<Status>) =>
-                new StoryPresenter (view)
+                new StoryPresenter(view)
               }
               itemComponentGenerator={(Status) => (
                 <StatusItem status={Status} />

@@ -1,6 +1,6 @@
 import { AuthToken, User } from "tweeter-shared";
 import { AuthView, Presenter } from "./Presenter";
-import { UserService } from "../model/UserService";
+import { UserService } from "../model/service/UserService";
 
 export abstract class AuthPresenter<T extends AuthView> extends Presenter<T> {
   protected _userService: UserService;
