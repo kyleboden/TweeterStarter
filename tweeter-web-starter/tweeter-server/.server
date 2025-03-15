@@ -2,6 +2,8 @@ BUCKET='kboden-tweeter'
 LAMBDA_ROLE='arn:aws:iam::888577052624:role/tweeter-aws-scripts-role'
 EDIT_LAMBDALIST='
 tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler,
-tweeterGetFollowers | lambda/follow/GetFollowersLambda.handler
+tweeterGetFollowers | lambda/follow/GetFollowersLambda.handler,
+tweeterGetFeedItems| lambda/status/GetFeedItemsLambda.handler
+
 '
-LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:888577052624:layer:tweeterLambdaLayer:4'
+LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:888577052624:layer:tweeterLambdaLayer:7'
