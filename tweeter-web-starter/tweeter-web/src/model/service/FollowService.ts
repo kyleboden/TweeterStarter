@@ -13,8 +13,6 @@ export class FollowService {
     pageSize: number,
     lastItem: User | null
   ): Promise<[User[], boolean]> {
-    // TODO: Replace with the result of calling server
-    // return FakeData.instance.getPageOfUsers(lastItem, pageSize, userAlias);
     const facade = new ServerFacade();
     const request: PagedUserItemRequest = {
       token: authToken.token,
@@ -31,8 +29,6 @@ export class FollowService {
     pageSize: number,
     lastItem: User | null
   ): Promise<[User[], boolean]> {
-    // TODO: Replace with the result of calling server
-    // return FakeData.instance.getPageOfUsers(lastItem, pageSize, userAlias);
     const facade = new ServerFacade();
     const request: PagedUserItemRequest = {
       token: authToken.token,
