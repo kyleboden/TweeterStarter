@@ -93,4 +93,31 @@ export class ServerFacade {
       throw new Error(response.message ?? "Unknown errorr");
     }
   }
+
+  public async getMoreStoryItems(
+    request: PagedItemRequest<StatusDto>
+  ): Promise<[Status[], boolean]> {
+    const response = await this.clientCommunicator.doPost<
+      PagedItemRequest<StatusDto>,
+      PagedItemResponse<StatusDto>
+    >(request, "/storyItem/list");
+
+    // Convert the StatusDto array returned by ClientCommunicator to a Status array
+    const items: Status[] | null =
+      response.success && response.items
+        ? response.items.map((dto) => Status.fromDto(dto) as Status)
+        : null;
+
+    // Handle errors
+    if (response.success) {
+      if (items == null) {
+        throw new Error(`No story items found`);
+      } else {
+        return [items, response.hasMore];
+      }
+    } else {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    }
+  }
 }

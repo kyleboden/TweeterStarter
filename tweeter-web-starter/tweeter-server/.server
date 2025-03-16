@@ -4,6 +4,7 @@ EDIT_LAMBDALIST='
 tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler,
 tweeterGetFollowers | lambda/follow/GetFollowersLambda.handler,
 tweeterGetFeedItems| lambda/status/GetFeedItemsLambda.handler
+tweeterGetStoryItems| lambda/status/GetStoryItemsLambda.handler
 
 '
 LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:888577052624:layer:tweeterLambdaLayer:7'
