@@ -1,4 +1,10 @@
-import { AuthToken, FakeData, PagedItemRequest, Status } from "tweeter-shared";
+import {
+  AuthToken,
+  FakeData,
+  PagedItemRequest,
+  Status,
+  StatusDto,
+} from "tweeter-shared";
 import { ServerFacade } from "../../network/ServerFacade";
 
 export class StatusService {
@@ -9,11 +15,11 @@ export class StatusService {
     lastItem: Status | null
   ): Promise<[Status[], boolean]> {
     const facade = new ServerFacade();
-    const request: PagedItemRequest<Status> = {
+    const request: PagedItemRequest<StatusDto> = {
       token: authToken.token,
       userAlias: userAlias,
       pageSize: pageSize,
-      lastItem: lastItem,
+      lastItem: lastItem ? lastItem.dto : null,
     };
     return facade.getMoreFeedItems(request);
   }
@@ -25,11 +31,11 @@ export class StatusService {
     lastItem: Status | null
   ): Promise<[Status[], boolean]> {
     const facade = new ServerFacade();
-    const request: PagedItemRequest<Status> = {
+    const request: PagedItemRequest<StatusDto> = {
       token: authToken.token,
       userAlias: userAlias,
       pageSize: pageSize,
-      lastItem: lastItem,
+      lastItem: lastItem ? lastItem.dto : null,
     };
     return facade.getMoreStoryItems(request);
   }
