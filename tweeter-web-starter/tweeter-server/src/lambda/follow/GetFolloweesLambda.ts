@@ -11,7 +11,6 @@ export const handler = async (
     request.pageSize,
     request.lastItem
   );
-  console.log("request: ", request);
 
   return {
     success: true,

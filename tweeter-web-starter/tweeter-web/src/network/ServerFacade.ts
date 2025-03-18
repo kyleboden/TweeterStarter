@@ -1,4 +1,5 @@
 import {
+  IsFollowerRequest,
   PagedItemRequest,
   PagedItemResponse,
   PostStatusRequest,
@@ -129,5 +130,15 @@ export class ServerFacade {
       TweeterResponse
     >(request, "/postStatus/list");
     console.log(response.message);
+  }
+
+  public async getIsFollowerStatus(
+    request: IsFollowerRequest
+  ): Promise<boolean> {
+    const response = await this.clientCommunicator.doPost<
+      IsFollowerRequest,
+      TweeterResponse
+    >(request, "/isFollowerStatus/list");
+    return response.success;
   }
 }
