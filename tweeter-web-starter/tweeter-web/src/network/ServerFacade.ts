@@ -1,8 +1,10 @@
 import {
   PagedItemRequest,
   PagedItemResponse,
+  PostStatusRequest,
   Status,
   StatusDto,
+  TweeterResponse,
   User,
   UserDto,
 } from "tweeter-shared";
@@ -119,5 +121,13 @@ export class ServerFacade {
       console.error(response);
       throw new Error(response.message ?? "Unknown errorr");
     }
+  }
+
+  public async postStatus(request: PostStatusRequest): Promise<void> {
+    const response = await this.clientCommunicator.doPost<
+      PostStatusRequest,
+      TweeterResponse
+    >(request, "/postStatus/list");
+    console.log(response.message);
   }
 }

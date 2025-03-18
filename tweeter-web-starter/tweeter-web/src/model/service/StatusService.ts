@@ -2,6 +2,7 @@ import {
   AuthToken,
   FakeData,
   PagedItemRequest,
+  PostStatusRequest,
   Status,
   StatusDto,
 } from "tweeter-shared";
@@ -43,8 +44,14 @@ export class StatusService {
     authToken: AuthToken,
     newStatus: Status
   ): Promise<void> {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    // // Pause so we can see the logging out message. Remove when connected to the server
+    // await new Promise((f) => setTimeout(f, 2000));
+    const facade = new ServerFacade();
+    const request: PostStatusRequest = {
+      token: authToken.token,
+      newStatus: newStatus.dto,
+    };
+    await facade.postStatus(request);
     // TODO: Call the server to post the status
   }
 }
