@@ -1,5 +1,6 @@
 import {
   IsFollowerRequest,
+  NumFollowResponse,
   PagedItemRequest,
   PagedItemResponse,
   PostStatusRequest,
@@ -8,6 +9,7 @@ import {
   TweeterResponse,
   User,
   UserDto,
+  UserRequest,
 } from "tweeter-shared";
 import { ClientCommunicator } from "./ClientCommunicator";
 
@@ -140,5 +142,27 @@ export class ServerFacade {
       TweeterResponse
     >(request, "/isFollowerStatus/list");
     return response.success;
+  }
+
+  public async getFolloweeCount(request: UserRequest): Promise<number> {
+    const response = await this.clientCommunicator.doPost<
+      UserRequest,
+      NumFollowResponse
+    >(request, "/followeeCount/list");
+    console.log("in getFollowee Count");
+    console.log("response: ", response);
+
+    return response.numFollow;
+  }
+
+  public async getFollowerCount(request: UserRequest): Promise<number> {
+    const response = await this.clientCommunicator.doPost<
+      UserRequest,
+      NumFollowResponse
+    >(request, "/followerCount/list");
+    console.log("in getFollower Count");
+    console.log("response: ", response);
+
+    return response.numFollow;
   }
 }

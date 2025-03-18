@@ -23,12 +23,14 @@ export type { PagedItemRequest } from "./model/net/request/PagedItemRequest";
 export type { TweeterRequest } from "./model/net/request/TweeterRequest";
 export type { PostStatusRequest } from "./model/net/request/PostStatusRequest";
 export type { IsFollowerRequest } from "./model/net/request/IsFollowerRequest";
+export type { UserRequest } from "./model/net/request/UserRequest";
 
 //
 // Requests
 //
 export type { PagedItemResponse } from "./model/net/response/PagedItemResponse";
 export type { TweeterResponse } from "./model/net/response/TweeterResponse";
+export type { NumFollowResponse } from "./model/net/response/NumFollowResponse";
 
 //
 // Other
