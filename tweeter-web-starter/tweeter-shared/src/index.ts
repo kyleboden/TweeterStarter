@@ -26,11 +26,12 @@ export type { IsFollowerRequest } from "./model/net/request/IsFollowerRequest";
 export type { UserRequest } from "./model/net/request/UserRequest";
 
 //
-// Requests
+// Responses
 //
 export type { PagedItemResponse } from "./model/net/response/PagedItemResponse";
 export type { TweeterResponse } from "./model/net/response/TweeterResponse";
 export type { NumFollowResponse } from "./model/net/response/NumFollowResponse";
+export type { FollowResponse } from "./model/net/response/FollowResponse";
 
 //
 // Other

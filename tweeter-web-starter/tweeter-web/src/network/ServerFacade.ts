@@ -1,4 +1,5 @@
 import {
+  FollowResponse,
   IsFollowerRequest,
   NumFollowResponse,
   PagedItemRequest,
@@ -164,5 +165,23 @@ export class ServerFacade {
     console.log("response: ", response);
 
     return response.numFollow;
+  }
+
+  public async follow(request: UserRequest): Promise<[number, number]> {
+    const response = await this.clientCommunicator.doPost<
+      UserRequest,
+      FollowResponse
+    >(request, "/follow/list");
+
+    return [response.numFollow, response.follow];
+  }
+
+  public async unfollow(request: UserRequest): Promise<[number, number]> {
+    const response = await this.clientCommunicator.doPost<
+      UserRequest,
+      FollowResponse
+    >(request, "/unfollow/list");
+
+    return [response.numFollow, response.follow];
   }
 }

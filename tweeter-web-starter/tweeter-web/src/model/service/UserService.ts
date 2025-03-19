@@ -54,14 +54,22 @@ export class UserService {
     userToFollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
     // Pause so we can see the follow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    // await new Promise((f) => setTimeout(f, 2000));
 
-    // TODO: Call the server
+    // // TODO: Call the server
 
-    const followerCount = await this.getFollowerCount(authToken, userToFollow);
-    const followeeCount = await this.getFolloweeCount(authToken, userToFollow);
+    // const followerCount = await this.getFollowerCount(authToken, userToFollow);
+    // const followeeCount = await this.getFolloweeCount(authToken, userToFollow);
 
-    return [followerCount, followeeCount];
+    // return [followerCount, followeeCount];
+
+    console.log("about to call facade in follow");
+    const facade = new ServerFacade();
+    const request: UserRequest = {
+      token: authToken.token,
+      user: userToFollow.dto,
+    };
+    return facade.follow(request);
   }
 
   public async unfollow(
@@ -69,20 +77,27 @@ export class UserService {
     userToUnfollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
     // Pause so we can see the unfollow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    // await new Promise((f) => setTimeout(f, 2000));
 
-    // TODO: Call the server
+    // // TODO: Call the server
 
-    const followerCount = await this.getFollowerCount(
-      authToken,
-      userToUnfollow
-    );
-    const followeeCount = await this.getFolloweeCount(
-      authToken,
-      userToUnfollow
-    );
+    // const followerCount = await this.getFollowerCount(
+    //   authToken,
+    //   userToUnfollow
+    // );
+    // const followeeCount = await this.getFolloweeCount(
+    //   authToken,
+    //   userToUnfollow
+    // );
 
-    return [followerCount, followeeCount];
+    // return [followerCount, followeeCount];
+    console.log("about to call facade in follow");
+    const facade = new ServerFacade();
+    const request: UserRequest = {
+      token: authToken.token,
+      user: userToUnfollow.dto,
+    };
+    return facade.follow(request);
   }
 
   public async login(
