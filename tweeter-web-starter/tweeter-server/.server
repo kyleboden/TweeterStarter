@@ -13,6 +13,9 @@ tweeterGetFolloweeCount | lambda/user/GetFolloweeCountLambda.handler
 tweeterGetFollowerCount | lambda/user/GetFollowerCountLambda.handler
 tweeterFollow | lambda/user/FollowLambda.handler
 tweeterUnfollow | lambda/user/UnfollowLambda.handler
+tweeterLogin | lambda/user/LoginLambda.handler
+tweeterRegister | lambda/user/RegisterLambda.handler
+tweeterLogout | lambda/user/LogoutLambda.handler
 
 '
-LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:888577052624:layer:tweeterLambdaLayer:11'
+LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:888577052624:layer:tweeterLambdaLayer:12'

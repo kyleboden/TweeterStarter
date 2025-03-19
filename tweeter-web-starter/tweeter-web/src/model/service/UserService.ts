@@ -5,6 +5,9 @@ import {
   FakeData,
   IsFollowerRequest,
   UserRequest,
+  LoginRequest,
+  RegisterRequest,
+  TweeterRequest,
 } from "tweeter-shared";
 import { ServerFacade } from "../../network/ServerFacade";
 
@@ -53,16 +56,6 @@ export class UserService {
     authToken: AuthToken,
     userToFollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the follow message. Remove when connected to the server
-    // await new Promise((f) => setTimeout(f, 2000));
-
-    // // TODO: Call the server
-
-    // const followerCount = await this.getFollowerCount(authToken, userToFollow);
-    // const followeeCount = await this.getFolloweeCount(authToken, userToFollow);
-
-    // return [followerCount, followeeCount];
-
     console.log("about to call facade in follow");
     const facade = new ServerFacade();
     const request: UserRequest = {
@@ -76,21 +69,6 @@ export class UserService {
     authToken: AuthToken,
     userToUnfollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the unfollow message. Remove when connected to the server
-    // await new Promise((f) => setTimeout(f, 2000));
-
-    // // TODO: Call the server
-
-    // const followerCount = await this.getFollowerCount(
-    //   authToken,
-    //   userToUnfollow
-    // );
-    // const followeeCount = await this.getFolloweeCount(
-    //   authToken,
-    //   userToUnfollow
-    // );
-
-    // return [followerCount, followeeCount];
     console.log("about to call facade in follow");
     const facade = new ServerFacade();
     const request: UserRequest = {
@@ -104,14 +82,14 @@ export class UserService {
     alias: string,
     password: string
   ): Promise<[User, AuthToken]> {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid alias or password");
-    }
-
-    return [user, FakeData.instance.authToken];
+    console.log("about to call facade in login");
+    const facade = new ServerFacade();
+    const request: LoginRequest = {
+      alias: alias,
+      password: password,
+      token: "fakeToken",
+    };
+    return facade.login(request);
   }
 
   public async register(
@@ -122,23 +100,27 @@ export class UserService {
     userImageBytes: Uint8Array,
     imageFileExtension: string
   ): Promise<[User, AuthToken]> {
-    // Not neded now, but will be needed when you make the request to the server in milestone 3
-    const imageStringBase64: string =
-      Buffer.from(userImageBytes).toString("base64");
-
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
-
-    if (user === null) {
-      throw new Error("Invalid registration");
-    }
-
-    return [user, FakeData.instance.authToken];
+    console.log("about to call facade in register");
+    const facade = new ServerFacade();
+    const request: RegisterRequest = {
+      firstName: firstName,
+      lastName: lastName,
+      alias: alias,
+      password: password,
+      token: "fakeToken",
+      userImageBytes: userImageBytes,
+      imageFileExtension: imageFileExtension,
+    };
+    return facade.register(request);
   }
 
   public async logout(authToken: AuthToken): Promise<void> {
-    // Pause so we can see the logging out message. Delete when the call to the server is implemented.
-    await new Promise((res) => setTimeout(res, 1000));
+    console.log("about to call facade in logout");
+    const facade = new ServerFacade();
+    const request: TweeterRequest = {
+      token: "fakeToken",
+    };
+    return facade.logout(request);
   }
 
   public async getUser(

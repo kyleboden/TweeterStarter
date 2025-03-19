@@ -1,12 +1,17 @@
 import {
+  AuthResponse,
+  AuthToken,
   FollowResponse,
   IsFollowerRequest,
+  LoginRequest,
   NumFollowResponse,
   PagedItemRequest,
   PagedItemResponse,
   PostStatusRequest,
+  RegisterRequest,
   Status,
   StatusDto,
+  TweeterRequest,
   TweeterResponse,
   User,
   UserDto,
@@ -183,5 +188,30 @@ export class ServerFacade {
     >(request, "/unfollow/list");
 
     return [response.numFollow, response.follow];
+  }
+
+  public async login(request: LoginRequest): Promise<[User, AuthToken]> {
+    const response = await this.clientCommunicator.doPost<
+      LoginRequest,
+      AuthResponse
+    >(request, "/login/list");
+
+    return [User.fromDto(response.user)!, response.authToken];
+  }
+
+  public async register(request: RegisterRequest): Promise<[User, AuthToken]> {
+    const response = await this.clientCommunicator.doPost<
+      RegisterRequest,
+      AuthResponse
+    >(request, "/register/list");
+
+    return [User.fromDto(response.user)!, response.authToken];
+  }
+
+  public async logout(request: TweeterRequest): Promise<void> {
+    await this.clientCommunicator.doPost<TweeterRequest, TweeterResponse>(
+      request,
+      "/logout/list"
+    );
   }
 }
