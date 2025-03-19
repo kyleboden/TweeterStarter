@@ -8,6 +8,7 @@ import {
   LoginRequest,
   RegisterRequest,
   TweeterRequest,
+  GetUserRequest,
 } from "tweeter-shared";
 import { ServerFacade } from "../../network/ServerFacade";
 
@@ -118,7 +119,7 @@ export class UserService {
     console.log("about to call facade in logout");
     const facade = new ServerFacade();
     const request: TweeterRequest = {
-      token: "fakeToken",
+      token: authToken.token,
     };
     return facade.logout(request);
   }
@@ -127,7 +128,12 @@ export class UserService {
     authToken: AuthToken,
     alias: string
   ): Promise<User | null> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias);
+    console.log("about to call facade in getUser");
+    const facade = new ServerFacade();
+    const request: GetUserRequest = {
+      alias: alias,
+      token: authToken.token,
+    };
+    return facade.getUser(request);
   }
 }

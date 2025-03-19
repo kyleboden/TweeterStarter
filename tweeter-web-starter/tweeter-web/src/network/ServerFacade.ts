@@ -2,6 +2,8 @@ import {
   AuthResponse,
   AuthToken,
   FollowResponse,
+  GetUserRequest,
+  GetUserResponse,
   IsFollowerRequest,
   LoginRequest,
   NumFollowResponse,
@@ -213,5 +215,14 @@ export class ServerFacade {
       request,
       "/logout/list"
     );
+  }
+
+  public async getUser(request: GetUserRequest): Promise<User | null> {
+    const response = await this.clientCommunicator.doPost<
+      GetUserRequest,
+      GetUserResponse
+    >(request, "/getUser/list");
+
+    return User.fromDto(response.user);
   }
 }
