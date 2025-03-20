@@ -23,7 +23,7 @@ describe("Facade", () => {
       password: "pass",
       firstName: "john",
       lastName: "doe",
-      userImageBytes: new Uint8Array([1, 2, 3, 4, 5]),
+      userImageBytes: "myimage",
       imageFileExtension: "imageExtenstion",
     };
     const [user, authToken] = await facade.register(request);

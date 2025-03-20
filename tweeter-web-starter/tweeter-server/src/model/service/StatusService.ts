@@ -3,7 +3,6 @@ import {
   FakeData,
   Status,
   StatusDto,
-  TweeterResponse,
 } from "tweeter-shared";
 
 export class StatusService {

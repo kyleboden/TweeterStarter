@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import {
   AuthToken,
   User,
@@ -11,6 +10,7 @@ import {
   GetUserRequest,
 } from "tweeter-shared";
 import { ServerFacade } from "../../network/ServerFacade";
+import { Buffer } from "buffer";
 
 export class UserService {
   public async getIsFollowerStatus(
@@ -102,6 +102,8 @@ export class UserService {
     imageFileExtension: string
   ): Promise<[User, AuthToken]> {
     console.log("about to call facade in register");
+    let imageStringBase64: string =
+      Buffer.from(userImageBytes).toString("base64");
     const facade = new ServerFacade();
     const request: RegisterRequest = {
       firstName: firstName,
@@ -109,7 +111,7 @@ export class UserService {
       alias: alias,
       password: password,
       token: "fakeToken",
-      userImageBytes: userImageBytes,
+      userImageBytes: imageStringBase64,
       imageFileExtension: imageFileExtension,
     };
     return facade.register(request);
