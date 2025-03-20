@@ -198,7 +198,17 @@ export class ServerFacade {
       AuthResponse
     >(request, "/login/list");
 
-    return [User.fromDto(response.user)!, response.authToken];
+    // Handle errors
+    if (response.success) {
+      if (response.user.alias == null) {
+        throw new Error(`Need to enter an alias to login`);
+      } else {
+        return [User.fromDto(response.user)!, response.authToken];
+      }
+    } else {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    }
   }
 
   public async register(request: RegisterRequest): Promise<[User, AuthToken]> {
@@ -207,7 +217,22 @@ export class ServerFacade {
       AuthResponse
     >(request, "/register/list");
 
-    return [User.fromDto(response.user)!, response.authToken];
+    // Handle errors
+    if (response.success) {
+      if (
+        response.user.firstName == null ||
+        response.user.lastName == null ||
+        response.user.alias == null ||
+        response.user.imageUrl == null
+      ) {
+        throw new Error(`Need to enter an alias to register`);
+      } else {
+        return [User.fromDto(response.user)!, response.authToken];
+      }
+    } else {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    }
   }
 
   public async logout(request: TweeterRequest): Promise<void> {
