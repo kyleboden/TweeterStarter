@@ -12,7 +12,8 @@ import {
   verify,
   when,
 } from "@typestrong/ts-mockito";
-import { StatusService } from "../../../src/model/StatusService";
+import { StatusService } from "../../../src/model/service/StatusService";
+// import { StatusService } from "../../../src/model/StatusService";
 
 describe("PostStatusPresenter", () => {
   let mockPostStatusPresenterView: PostStatusView;

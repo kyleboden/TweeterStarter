@@ -140,6 +140,12 @@ export class ServerFacade {
       TweeterResponse
     >(request, "/postStatus/list");
     console.log(response.message);
+
+    // Handle errors
+    if (!response.success) {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    }
   }
 
   public async getIsFollowerStatus(
@@ -160,7 +166,13 @@ export class ServerFacade {
     console.log("in getFollowee Count");
     console.log("response: ", response);
 
-    return response.numFollow;
+    // Handle errors
+    if (!response.success) {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    } else {
+      return response.numFollow;
+    }
   }
 
   public async getFollowerCount(request: UserRequest): Promise<number> {
@@ -171,7 +183,13 @@ export class ServerFacade {
     console.log("in getFollower Count");
     console.log("response: ", response);
 
-    return response.numFollow;
+    // Handle errors
+    if (!response.success) {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    } else {
+      return response.numFollow;
+    }
   }
 
   public async follow(request: UserRequest): Promise<[number, number]> {
@@ -180,7 +198,13 @@ export class ServerFacade {
       FollowResponse
     >(request, "/follow/list");
 
-    return [response.numFollow, response.follow];
+    // Handle errors
+    if (!response.success) {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    } else {
+      return [response.numFollow, response.follow];
+    }
   }
 
   public async unfollow(request: UserRequest): Promise<[number, number]> {
@@ -189,7 +213,13 @@ export class ServerFacade {
       FollowResponse
     >(request, "/unfollow/list");
 
-    return [response.numFollow, response.follow];
+    // Handle errors
+    if (!response.success) {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    } else {
+      return [response.numFollow, response.follow];
+    }
   }
 
   public async login(request: LoginRequest): Promise<[User, AuthToken]> {
@@ -248,6 +278,12 @@ export class ServerFacade {
       GetUserResponse
     >(request, "/getUser/list");
 
-    return User.fromDto(response.user);
+    // Handle errors
+    if (!response.success) {
+      console.error(response);
+      throw new Error(response.message ?? "Unknown errorr");
+    } else {
+      return User.fromDto(response.user);
+    }
   }
 }
