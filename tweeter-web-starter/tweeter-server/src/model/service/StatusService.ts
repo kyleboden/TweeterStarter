@@ -5,7 +5,7 @@ import {
   StatusDto,
 } from "tweeter-shared";
 
-export class StatusService {
+export class  StatusService {
   public async loadMoreFeedItems(
     token: string,
     userAlias: string,
