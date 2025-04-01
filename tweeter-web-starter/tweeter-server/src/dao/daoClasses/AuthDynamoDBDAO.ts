@@ -13,7 +13,7 @@ export class AuthDynamoDBDAO implements AuthDAO {
   readonly tableName = "authTokens";
 
   readonly aliasAttr = "alias";
-  readonly tokenAttr = "password";
+  readonly tokenAttr = "token";
   readonly timestampAttr = "time_stamp";
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());

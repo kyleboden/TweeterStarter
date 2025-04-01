@@ -85,29 +85,26 @@ export class UserService {
     userImageBytes: string,
     imageFileExtension: string
   ): Promise<[UserDto, AuthToken]> {
-    // Not neded now, but will be needed when you make the request to the server in milestone 3
-    const imageStringBase64: string =
-      Buffer.from(userImageBytes).toString("base64");
-
-    // TODO: Replace with the result of calling the server
-    // const user = FakeData.instance.firstUser;
     if ((await this.userDao.getUser(alias)) != undefined) {
       throw new Error("Invalid registration");
     }
 
     const userEntity: UserEntity = {
-      alias: alias,
-      password: password,
-      firstName: firstName,
-      lastName: lastName,
-      userImageBytes: userImageBytes,
-      imageFileExtension: imageFileExtension,
+      alias,
+      password,
+      firstName,
+      lastName,
+      userImageBytes,
+      imageFileExtension,
     };
     await this.userDao.putUser(userEntity);
 
-    // if (user === null) {
-    //   throw new Error("Invalid registration");
-    // }
+    const userDto: UserDto = {
+      firstName: firstName,
+      lastName: lastName,
+      alias: alias,
+      imageUrl: imageFileExtension, // TODO: Idk if this is right
+    };
 
     const authToken: AuthToken = AuthToken.Generate();
     const authEntity: AuthEntity = {
@@ -117,15 +114,7 @@ export class UserService {
     };
     await this.authDao.putAuth(authEntity);
 
-    const userDto: UserDto = {
-      firstName: firstName,
-      lastName: lastName,
-      alias: alias,
-      imageUrl: imageFileExtension, // TODO: Idk if this is right
-    };
-
     return [userDto, authToken];
-    // return [user.dto, FakeData.instance.authToken];
   }
 
   public async logout(token: string): Promise<void> {
