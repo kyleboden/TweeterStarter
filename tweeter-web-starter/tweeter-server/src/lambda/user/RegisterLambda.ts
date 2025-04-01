@@ -6,18 +6,28 @@ export const handler = async (
   request: RegisterRequest
 ): Promise<AuthResponse> => {
   const userService = new UserService(new DynamoDBFactory());
-  const [userDto, authToken] = await userService.register(
-    request.firstName,
-    request.lastName,
-    request.alias,
-    request.password,
-    request.userImageBytes,
-    request.imageFileExtension
-  );
-  return {
-    success: true,
-    message: null,
-    user: userDto,
-    authToken: authToken,
-  };
+  try {
+    const [userDto, authToken] = await userService.register(
+      request.firstName,
+      request.lastName,
+      request.alias,
+      request.password,
+      request.userImageBytes,
+      request.imageFileExtension
+    );
+    return {
+      success: true,
+      message: null,
+      user: userDto,
+      authToken: authToken,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "An unknown error occured",
+      user: null,
+      authToken: null,
+    };
+  }
 };

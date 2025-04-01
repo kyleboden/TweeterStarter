@@ -230,10 +230,10 @@ export class ServerFacade {
 
     // Handle errors
     if (response.success) {
-      if (response.user.alias == null) {
-        throw new Error(`Need to enter an alias to login`);
-      } else {
+      if (response.user && response.authToken) {
         return [User.fromDto(response.user)!, response.authToken];
+      } else {
+        throw new Error(`Error Loggin in`);
       }
     } else {
       console.error(response);
@@ -249,16 +249,22 @@ export class ServerFacade {
 
     // Handle errors
     if (response.success) {
-      if (
-        response.user.firstName == null ||
-        response.user.lastName == null ||
-        response.user.alias == null ||
-        response.user.imageUrl == null
-      ) {
-        throw new Error(`Need to enter an alias to register`);
-      } else {
+      if (response.user && response.authToken) {
         return [User.fromDto(response.user)!, response.authToken];
+      } else {
+        throw new Error("Error Registering");
       }
+
+      // if (
+      //   response.user.firstName == null ||
+      //   response.user.lastName == null ||
+      //   response.user.alias == null ||
+      //   response.user.imageUrl == null
+      // ) {
+      //   throw new Error(`Need to enter an alias to register`);
+      // } else {
+      //   return [User.fromDto(response.user)!, response.authToken];
+      // }
     } else {
       console.error(response);
       throw new Error(response.message ?? "Unknown errorr");
