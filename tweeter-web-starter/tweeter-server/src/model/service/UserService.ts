@@ -5,6 +5,7 @@ import { AuthDAO } from "../../dao/daoInterfaces/AuthDAO";
 import { UserEntity } from "../../dao/entity/UserEntity";
 import { AuthEntity } from "../../dao/entity/AuthEntity";
 import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
+import bcrypt from "bcryptjs";
 
 export class UserService {
   private userDao: UserDAO;
@@ -76,31 +77,31 @@ export class UserService {
     if (!userEntity) {
       throw new Error("User does not exist with these credentials");
     }
-    const userPassword = userEntity?.password;
-
-    if (password === userPassword) {
-      const fileName = `${alias}_Image`;
-      const imageUrl = await this.imageDao.getImage(fileName);
-
-      const userDto: UserDto = {
-        firstName: userEntity.firstName,
-        lastName: userEntity.lastName,
-        alias: userEntity.alias,
-        imageUrl: imageUrl,
-      };
-
-      const authToken: AuthToken = AuthToken.Generate();
-      const authEntity: AuthEntity = {
-        alias: alias,
-        token: authToken.token,
-        timestamp: authToken.timestamp,
-      };
-      await this.authDao.putAuth(authEntity);
-
-      return [userDto, authToken];
-    } else {
+    const userPassword = userEntity.password;
+    const isValidPassword = await bcrypt.compare(password, userPassword);
+    if (!isValidPassword) {
       throw new Error("Invalid alias or password");
     }
+
+    const fileName = `${alias}_Image`;
+    const imageUrl = await this.imageDao.getImage(fileName);
+
+    const userDto: UserDto = {
+      firstName: userEntity.firstName,
+      lastName: userEntity.lastName,
+      alias: userEntity.alias,
+      imageUrl: imageUrl,
+    };
+
+    const authToken: AuthToken = AuthToken.Generate();
+    const authEntity: AuthEntity = {
+      alias: alias,
+      token: authToken.token,
+      timestamp: authToken.timestamp,
+    };
+    await this.authDao.putAuth(authEntity);
+
+    return [userDto, authToken];
   }
 
   public async register(
@@ -115,9 +116,12 @@ export class UserService {
       throw new Error("Invalid registration");
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const userEntity: UserEntity = {
       alias,
-      password,
+      password: hashedPassword,
       firstName,
       lastName,
     };
@@ -154,4 +158,3 @@ export class UserService {
     return FakeData.instance.findUserByAlias(alias)?.dto || null;
   }
 }
-0;
