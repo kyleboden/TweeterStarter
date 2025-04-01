@@ -233,7 +233,7 @@ export class ServerFacade {
       if (response.user && response.authToken) {
         return [User.fromDto(response.user)!, response.authToken];
       } else {
-        throw new Error(`Error Loggin in`);
+        throw new Error(`Error Logging in`);
       }
     } else {
       console.error(response);

@@ -69,14 +69,38 @@ export class UserService {
     alias: string,
     password: string
   ): Promise<[UserDto, AuthToken]> {
-    // TODO: Replace with the result of calling the server
-    const user = FakeData.instance.firstUser;
+    const userEntity: UserEntity | undefined = await this.userDao.getUser(
+      alias
+    );
 
-    if (user === null) {
+    if (!userEntity) {
+      throw new Error("User does not exist with these credentials");
+    }
+    const userPassword = userEntity?.password;
+
+    if (password === userPassword) {
+      const fileName = `${alias}_Image`;
+      const imageUrl = await this.imageDao.getImage(fileName);
+
+      const userDto: UserDto = {
+        firstName: userEntity.firstName,
+        lastName: userEntity.lastName,
+        alias: userEntity.alias,
+        imageUrl: imageUrl,
+      };
+
+      const authToken: AuthToken = AuthToken.Generate();
+      const authEntity: AuthEntity = {
+        alias: alias,
+        token: authToken.token,
+        timestamp: authToken.timestamp,
+      };
+      await this.authDao.putAuth(authEntity);
+
+      return [userDto, authToken];
+    } else {
       throw new Error("Invalid alias or password");
     }
-
-    return [user.dto, FakeData.instance.authToken];
   }
 
   public async register(
@@ -96,8 +120,6 @@ export class UserService {
       password,
       firstName,
       lastName,
-      // userImageBytes,
-      // imageFileExtension,
     };
 
     await this.userDao.putUser(userEntity);

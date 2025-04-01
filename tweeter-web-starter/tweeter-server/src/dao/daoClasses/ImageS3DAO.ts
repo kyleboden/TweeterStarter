@@ -33,4 +33,8 @@ export class ImageS3DAO implements ImageDAO {
       throw Error("s3 put image failed with: " + error);
     }
   }
+
+  async getImage(fileName: string): Promise<string> {
+    return `https://${this.BUCKET}.s3.${this.REGION}.amazonaws.com/image/${fileName}`;
+  }
 }
