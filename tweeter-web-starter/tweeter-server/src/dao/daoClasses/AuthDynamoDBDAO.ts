@@ -15,6 +15,7 @@ export class AuthDynamoDBDAO implements AuthDAO {
   readonly aliasAttr = "alias";
   readonly tokenAttr = "token";
   readonly timestampAttr = "time_stamp";
+  readonly timeout = 60000;
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
@@ -73,5 +74,19 @@ export class AuthDynamoDBDAO implements AuthDAO {
       UpdateExpression: "SET " + this.timestampAttr + " = :timestamp, ",
     };
     await this.client.send(new UpdateCommand(params));
+  }
+
+  public async checkAuth(token: string): Promise<boolean> {
+    const authEntity: AuthEntity | undefined = await this.getAuth(token);
+    if (authEntity == undefined) {
+      throw new Error("Error validating");
+    }
+    if (Date.now() - authEntity.timestamp > this.timeout) {
+      await this.deleteAuth(token);
+      return false;
+    } else {
+      this.updateAuth(token, Date.now());
+      return true;
+    }
   }
 }
