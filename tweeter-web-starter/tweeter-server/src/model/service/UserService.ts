@@ -1,18 +1,20 @@
-import { Buffer } from "buffer";
 import { AuthToken, User, FakeData, UserDto } from "tweeter-shared";
 import { Factory } from "../../factory/Factory";
 import { UserDAO } from "../../dao/daoInterfaces/UserDAO";
 import { AuthDAO } from "../../dao/daoInterfaces/AuthDAO";
 import { UserEntity } from "../../dao/entity/UserEntity";
 import { AuthEntity } from "../../dao/entity/AuthEntity";
+import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
 
 export class UserService {
   private userDao: UserDAO;
   private authDao: AuthDAO;
+  private imageDao: ImageDAO;
 
   constructor(factory: Factory) {
     this.userDao = factory.getUserDAO();
     this.authDao = factory.getAuthDAO();
+    this.imageDao = factory.getImageDAO();
   }
 
   public async getIsFollowerStatus(
@@ -94,16 +96,19 @@ export class UserService {
       password,
       firstName,
       lastName,
-      userImageBytes,
-      imageFileExtension,
+      // userImageBytes,
+      // imageFileExtension,
     };
+
     await this.userDao.putUser(userEntity);
+    const fileName = `${alias}_Image`;
+    const imageUrl = await this.imageDao.putImage(fileName, userImageBytes);
 
     const userDto: UserDto = {
       firstName: firstName,
       lastName: lastName,
       alias: alias,
-      imageUrl: imageFileExtension, // TODO: Idk if this is right
+      imageUrl: imageUrl,
     };
 
     const authToken: AuthToken = AuthToken.Generate();

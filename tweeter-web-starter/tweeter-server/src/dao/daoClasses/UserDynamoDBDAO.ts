@@ -27,8 +27,8 @@ export class UserDynamoDBDAO implements UserDAO {
         [this.passwordAttr]: user.password,
         [this.firstNameAttr]: user.firstName,
         [this.lastNameAttr]: user.lastName,
-        [this.userImageBytesAttr]: user.userImageBytes,
-        [this.imageFileExtensionAttr]: user.imageFileExtension,
+        // [this.userImageBytesAttr]: user.userImageBytes,
+        // [this.imageFileExtensionAttr]: user.imageFileExtension,
       },
     };
     console.log("Putting user into DynamoDB:", JSON.stringify(params, null, 2)); // Debugging
@@ -55,8 +55,8 @@ export class UserDynamoDBDAO implements UserDAO {
           password: output.Item[this.passwordAttr],
           firstName: output.Item[this.firstNameAttr],
           lastName: output.Item[this.lastNameAttr],
-          userImageBytes: output.Item[this.userImageBytesAttr],
-          imageFileExtension: output.Item[this.imageFileExtensionAttr],
+          // userImageBytes: output.Item[this.userImageBytesAttr],
+          // imageFileExtension: output.Item[this.imageFileExtensionAttr],
         };
   }
 }
