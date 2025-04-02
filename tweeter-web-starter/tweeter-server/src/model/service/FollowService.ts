@@ -2,23 +2,19 @@ import { AuthToken, FakeData, User, UserDto } from "tweeter-shared";
 import { Factory } from "../../factory/Factory";
 import { FollowsDAO } from "../../dao/daoInterfaces/FollowsDAO";
 import { UserDAO } from "../../dao/daoInterfaces/UserDAO";
-import { StatusDAO } from "../../dao/daoInterfaces/StatusDAO";
 import { DataPage } from "../../dao/entity/DataPage";
 import { Follower } from "../../dao/entity/Follower";
-import { BatchGetCommand } from "@aws-sdk/lib-dynamodb";
 import { UserEntity } from "../../dao/entity/UserEntity";
 import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
 
 export class FollowService {
   private followsDAO: FollowsDAO;
   private userDAO: UserDAO;
-  private statusDAO: StatusDAO;
   private imageDAO: ImageDAO;
 
   constructor(factory: Factory) {
     this.followsDAO = factory.getFollowsDAO();
     this.userDAO = factory.getUserDAO();
-    this.statusDAO = factory.getStatusDAO();
     this.imageDAO = factory.getImageDAO();
   }
 
@@ -50,7 +46,6 @@ export class FollowService {
       }
 
       const fileName = `${alias}_Image`;
-
       const imageUrl = await this.imageDAO.getImage(fileName);
       const userDto: UserDto = {
         firstName: userEntity?.firstName,
@@ -93,7 +88,6 @@ export class FollowService {
       }
 
       const fileName = `${alias}_Image`;
-
       const imageUrl = await this.imageDAO.getImage(fileName);
       const userDto: UserDto = {
         firstName: userEntity?.firstName,

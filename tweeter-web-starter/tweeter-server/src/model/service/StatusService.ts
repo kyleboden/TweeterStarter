@@ -3,9 +3,25 @@ import {
   FakeData,
   Status,
   StatusDto,
+  UserDto,
 } from "tweeter-shared";
+import { StoryDAO } from "../../dao/daoInterfaces/StoryDAO";
+import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
+import { UserDAO } from "../../dao/daoInterfaces/UserDAO";
+import { Factory } from "../../factory/Factory";
+import { StatusEntity } from "../../dao/entity/StoryEntity";
+import { DataPage } from "../../dao/entity/DataPage";
 
-export class  StatusService {
+export class StatusService {
+  private userDAO: UserDAO;
+  private imageDAO: ImageDAO;
+  private storyDAO: StoryDAO;
+
+  constructor(factory: Factory) {
+    this.userDAO = factory.getUserDAO();
+    this.imageDAO = factory.getImageDAO();
+    this.storyDAO = factory.getStoryDAO();
+  }
   public async loadMoreFeedItems(
     token: string,
     userAlias: string,
@@ -22,8 +38,35 @@ export class  StatusService {
     pageSize: number,
     lastItem: StatusDto | null
   ): Promise<[StatusDto[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return this.getFakeData(lastItem, pageSize);
+    const dataPage: DataPage<StatusEntity> =
+      await this.storyDAO.getPageOfStories(
+        userAlias,
+        pageSize,
+        lastItem?.timestamp
+      );
+    // console.log("dataPage:  ", dataPage);
+    const statusDtoArray: StatusDto[] = [];
+
+    for (const statusEntity of dataPage.values) {
+      const userEntity = await this.userDAO.getUser(statusEntity.alias);
+      const fileName = `${userAlias}_Image`;
+      const imageUrl = await this.imageDAO.getImage(fileName);
+
+      const userDto: UserDto = {
+        firstName: userEntity!.firstName,
+        lastName: userEntity!.lastName,
+        alias: userEntity!.alias,
+        imageUrl: imageUrl,
+      };
+
+      const statusDto: StatusDto = {
+        post: statusEntity.post,
+        user: userDto,
+        timestamp: statusEntity.timestamp,
+      };
+      statusDtoArray.push(statusDto);
+    }
+    return [statusDtoArray, dataPage.hasMorePages];
   }
 
   public async postStatus(

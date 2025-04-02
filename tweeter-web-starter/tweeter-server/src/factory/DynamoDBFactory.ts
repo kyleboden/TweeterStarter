@@ -1,21 +1,18 @@
 import { AuthDynamoDBDAO } from "../dao/daoClasses/AuthDynamoDBDAO";
 import { FollowsDynamoDBDAO } from "../dao/daoClasses/FollowsDynamoDBDAO";
 import { ImageS3DAO } from "../dao/daoClasses/ImageS3DAO";
-import { StatusDynamoDBDAO } from "../dao/daoClasses/StatusDynamoDBDAO";
+import { StoryDynamoDBDAO } from "../dao/daoClasses/StoryDynamoDBDAO";
 import { UserDynamoDBDAO } from "../dao/daoClasses/UserDynamoDBDAO";
 import { AuthDAO } from "../dao/daoInterfaces/AuthDAO";
 import { FollowsDAO } from "../dao/daoInterfaces/FollowsDAO";
 import { ImageDAO } from "../dao/daoInterfaces/ImageDAO";
-import { StatusDAO } from "../dao/daoInterfaces/StatusDAO";
+import { StoryDAO } from "../dao/daoInterfaces/StoryDAO";
 import { UserDAO } from "../dao/daoInterfaces/UserDAO";
 import { Factory } from "./Factory";
 
 export class DynamoDBFactory implements Factory {
   getFollowsDAO(): FollowsDAO {
     return new FollowsDynamoDBDAO();
-  }
-  getStatusDAO(): StatusDAO {
-    return new StatusDynamoDBDAO();
   }
   getUserDAO(): UserDAO {
     return new UserDynamoDBDAO();
@@ -25,5 +22,8 @@ export class DynamoDBFactory implements Factory {
   }
   getImageDAO(): ImageDAO {
     return new ImageS3DAO();
+  }
+  getStoryDAO(): StoryDAO {
+    return new StoryDynamoDBDAO();
   }
 }
