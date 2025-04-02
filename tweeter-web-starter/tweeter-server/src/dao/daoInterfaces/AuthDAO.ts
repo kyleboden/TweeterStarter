@@ -8,4 +8,6 @@ export interface AuthDAO {
   deleteAuth(token: string): Promise<void>;
 
   updateAuth(token: string, timestamp: number): Promise<void>;
+
+  checkAuth(token: string): Promise<boolean>;
 }

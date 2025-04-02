@@ -5,9 +5,11 @@ import {
   PutCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
+
 import { AuthDAO } from "../daoInterfaces/AuthDAO";
 import { AuthEntity } from "../entity/AuthEntity";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
 
 export class AuthDynamoDBDAO implements AuthDAO {
   readonly tableName = "authTokens";
@@ -77,16 +79,39 @@ export class AuthDynamoDBDAO implements AuthDAO {
   }
 
   public async checkAuth(token: string): Promise<boolean> {
+    await this.deleteExpiredAuthtokens();
     const authEntity: AuthEntity | undefined = await this.getAuth(token);
     if (authEntity == undefined) {
-      throw new Error("Error validating");
-    }
-    if (Date.now() - authEntity.timestamp > this.timeout) {
-      await this.deleteAuth(token);
       return false;
-    } else {
-      this.updateAuth(token, Date.now());
-      return true;
     }
+    await this.updateAuth(token, Date.now());
+    return true;
+  }
+  private async deleteExpiredAuthtokens(): Promise<void> {
+    const authEntities: AuthEntity[] = await this.getAllAuthTokens();
+
+    for (const entity of authEntities) {
+      if (Date.now() - entity.timestamp > this.timeout) {
+        await this.deleteAuth(entity.token);
+      }
+    }
+  }
+  private async getAllAuthTokens(): Promise<AuthEntity[]> {
+    const params = {
+      TableName: this.tableName,
+    };
+
+    const output = await this.client.send(new ScanCommand(params));
+
+    return (
+      output.Items?.map((item) => {
+        const unmarshalled = unmarshall(item);
+        return {
+          alias: unmarshalled[this.aliasAttr],
+          token: unmarshalled[this.tokenAttr],
+          timestamp: Number(unmarshalled[this.timestampAttr]),
+        };
+      }) ?? []
+    );
   }
 }

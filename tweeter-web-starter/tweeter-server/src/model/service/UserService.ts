@@ -149,12 +149,11 @@ export class UserService {
   }
 
   public async logout(token: string): Promise<void> {
-    const authEntity = this.authDao.getAuth(token);
-    if (authEntity != undefined) {
-      this.authDao.deleteAuth(token);
-    } else {
+    const validAuth = await this.authDao.checkAuth(token);
+    if (!validAuth) {
       throw new Error("Error logging out");
     }
+    await this.authDao.deleteAuth(token);
   }
 
   public async getUser(token: string, alias: string): Promise<UserDto | null> {
