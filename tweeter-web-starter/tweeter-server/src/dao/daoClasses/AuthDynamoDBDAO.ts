@@ -61,8 +61,13 @@ export class AuthDynamoDBDAO implements AuthDAO {
   public async deleteAuth(token: string): Promise<void> {
     const params = {
       TableName: this.tableName,
-      Key: { [this.tokenAttr]: token },
+      Key: {
+        [this.tokenAttr]: token,
+      },
     };
+    console.log("params: ", params, "\n");
+
+    console.log("token", token);
     await this.client.send(new DeleteCommand(params));
   }
 
@@ -87,6 +92,7 @@ export class AuthDynamoDBDAO implements AuthDAO {
     await this.updateAuth(token, Date.now());
     return true;
   }
+
   private async deleteExpiredAuthtokens(): Promise<void> {
     const authEntities: AuthEntity[] = await this.getAllAuthTokens();
 
@@ -96,6 +102,7 @@ export class AuthDynamoDBDAO implements AuthDAO {
       }
     }
   }
+
   private async getAllAuthTokens(): Promise<AuthEntity[]> {
     const params = {
       TableName: this.tableName,

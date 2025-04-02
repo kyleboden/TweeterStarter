@@ -149,10 +149,12 @@ export class UserService {
   }
 
   public async logout(token: string): Promise<void> {
-    const validAuth = await this.authDao.checkAuth(token);
-    if (!validAuth) {
-      throw new Error("Error logging out");
-    }
+    // const validAuth = await this.authDao.checkAuth(token);
+    // if (!validAuth) {
+    //   throw new Error("Error logging out");
+    // }
+    console.log("token in logout: ", token, "\n");
+
     await this.authDao.deleteAuth(token);
   }
 

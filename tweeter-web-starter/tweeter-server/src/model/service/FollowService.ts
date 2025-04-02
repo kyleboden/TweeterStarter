@@ -6,17 +6,21 @@ import { StatusDAO } from "../../dao/daoInterfaces/StatusDAO";
 import { DataPage } from "../../dao/entity/DataPage";
 import { Follower } from "../../dao/entity/Follower";
 import { BatchGetCommand } from "@aws-sdk/lib-dynamodb";
+import { UserEntity } from "../../dao/entity/UserEntity";
+import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
 
 export class FollowService {
-  // private followsDAO: FollowsDAO;
-  // private userDAO: UserDAO;
-  // private statusDAO: StatusDAO;
+  private followsDAO: FollowsDAO;
+  private userDAO: UserDAO;
+  private statusDAO: StatusDAO;
+  private imageDAO: ImageDAO;
 
-  // constructor(factory: Factory) {
-  //   this.followsDAO = factory.getFollowsDAO();
-  //   this.userDAO = factory.getUserDAO();
-  //   this.statusDAO = factory.getStatusDAO();
-  // }
+  constructor(factory: Factory) {
+    this.followsDAO = factory.getFollowsDAO();
+    this.userDAO = factory.getUserDAO();
+    this.statusDAO = factory.getStatusDAO();
+    this.imageDAO = factory.getImageDAO();
+  }
 
   public async loadMoreFollowers(
     token: string,
@@ -24,17 +28,41 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDto | null
   ): Promise<[UserDto[], boolean]> {
-    // TODO: Replace with the result of calling server
+    const dataPage: DataPage<Follower> =
+      await this.followsDAO.getPageOfFollowers(
+        userAlias,
+        pageSize,
+        lastItem?.alias
+      );
+    const aliases: string[] = [];
+    for (const follower of dataPage.values) {
+      aliases.push(follower.followerHandle);
+    }
 
-    // const dataPage: DataPage<Follower> =
-    //   await this.followsDAO.getPageOfFollowers(
-    //     userAlias,
-    //     pageSize,
-    //     lastItem?.alias
-    //   );
-    // const result = await this.client.send(new BatchGetCommand(dataPage.values));
+    // const aliases = dataPage.values
+    const userDtoArray: UserDto[] = [];
+    for (const alias of aliases) {
+      const userEntity: UserEntity | undefined = await this.userDAO.getUser(
+        alias
+      );
+      if (!userEntity) {
+        throw new Error("Error finding a specific user.");
+      }
 
-    return this.getFakeData(lastItem, pageSize, userAlias);
+      const fileName = `${alias}_Image`;
+
+      const imageUrl = await this.imageDAO.getImage(fileName);
+      const userDto: UserDto = {
+        firstName: userEntity?.firstName,
+        lastName: userEntity?.lastName,
+        alias: userEntity?.alias,
+        imageUrl: imageUrl,
+      };
+
+      userDtoArray.push(userDto);
+    }
+
+    return [userDtoArray, dataPage.hasMorePages];
   }
 
   public async loadMoreFollowees(
@@ -43,8 +71,41 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDto | null
   ): Promise<[UserDto[], boolean]> {
-    // TODO: Replace with the result of calling server
-    return this.getFakeData(lastItem, pageSize, userAlias);
+    const dataPage: DataPage<Follower> =
+      await this.followsDAO.getPageOfFollowees(
+        userAlias,
+        pageSize,
+        lastItem?.alias
+      );
+    const aliases: string[] = [];
+    for (const followee of dataPage.values) {
+      aliases.push(followee.followeeHandle);
+    }
+
+    // const aliases = dataPage.values
+    const userDtoArray: UserDto[] = [];
+    for (const alias of aliases) {
+      const userEntity: UserEntity | undefined = await this.userDAO.getUser(
+        alias
+      );
+      if (!userEntity) {
+        throw new Error("Error finding a specific user.");
+      }
+
+      const fileName = `${alias}_Image`;
+
+      const imageUrl = await this.imageDAO.getImage(fileName);
+      const userDto: UserDto = {
+        firstName: userEntity?.firstName,
+        lastName: userEntity?.lastName,
+        alias: userEntity?.alias,
+        imageUrl: imageUrl,
+      };
+
+      userDtoArray.push(userDto);
+    }
+
+    return [userDtoArray, dataPage.hasMorePages];
   }
 
   private async getFakeData(

@@ -90,7 +90,9 @@ export class UserService {
       password: password,
       token: "fakeToken",
     };
-    return facade.login(request);
+    const retVal = facade.login(request);
+    console.log("returned authtoken in login: ", retVal);
+    return retVal;
   }
 
   public async register(
@@ -123,6 +125,7 @@ export class UserService {
     const request: TweeterRequest = {
       token: authToken.token,
     };
+    console.log("token in webUserService: ", authToken.token);
     return facade.logout(request);
   }
 
