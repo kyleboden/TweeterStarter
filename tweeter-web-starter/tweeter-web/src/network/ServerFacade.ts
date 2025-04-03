@@ -20,7 +20,6 @@ import {
   UserRequest,
 } from "tweeter-shared";
 import { ClientCommunicator } from "./ClientCommunicator";
-import bcrypt from "bcryptjs";
 
 export class ServerFacade {
   private SERVER_URL =

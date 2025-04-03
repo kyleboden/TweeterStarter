@@ -166,13 +166,28 @@ export class UserService {
     }
     console.log("token in logout: ", token, "\n");
 
-    
-
     await this.authDao.deleteAuth(token);
   }
 
   public async getUser(token: string, alias: string): Promise<UserDto | null> {
     // TODO: Replace with the result of calling server
-    return FakeData.instance.findUserByAlias(alias)?.dto || null;
+    // return FakeData.instance.findUserByAlias(alias)?.dto || null
+    const userEntity = await this.userDao.getUser(alias);
+
+    if (!userEntity) {
+      throw new Error("error getting user");
+    }
+
+    const fileName = `${alias}_Image`;
+    const imageUrl = await this.imageDao.getImage(fileName);
+
+    const userDto: UserDto = {
+      firstName: userEntity.firstName,
+      lastName: userEntity.lastName,
+      alias: userEntity.alias,
+      imageUrl: imageUrl,
+    };
+
+    return userDto;
   }
 }
