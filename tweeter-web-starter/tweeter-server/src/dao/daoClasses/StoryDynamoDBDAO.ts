@@ -70,8 +70,8 @@ export class StoryDynamoDBDAO implements StoryDAO {
     data.Items?.forEach((item) =>
       items.push({
         alias: item[this.aliasAttr]?.S ?? "", // Extracts string safely
-        timestamp: item[this.timestampAttr]?.N
-          ? Number(item[this.timestampAttr].N)
+        timestamp: item[this.timestampAttr]?.S
+          ? Number(item[this.timestampAttr].S)
           : 0, // Extracts number safely
         post: item[this.postAttr]?.S ?? "", // Extracts string safely
       })

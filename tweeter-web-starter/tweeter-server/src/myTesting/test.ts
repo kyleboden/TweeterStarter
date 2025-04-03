@@ -75,11 +75,14 @@ async function main() {
 
   // await userService.follow(tokena, user2);
 
-  const followers = await followDao.getAllFollowers("@ClintEastwood");
-  console.log("Number of Followers: ", followers.values.length);
+  // const followers = await followDao.getAllFollowers("@ClintEastwood");
+  // console.log("Number of Followers: ", followers.values.length);
 
-  const followees = await followDao.getAllFollowees("@FredFlintstone");
-  console.log("Number of Followees: ", followees.values.length);
+  // const followees = await followDao.getAllFollowees("@FredFlintstone");
+  // console.log("Number of Followees: ", followees.values.length);
+
+  const stories = await storyDao.getPageOfStories("@a", 10, undefined);
+  console.log(stories);
 }
 main().catch(console.error);
 

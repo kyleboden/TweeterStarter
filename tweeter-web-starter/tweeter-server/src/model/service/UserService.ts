@@ -27,7 +27,6 @@ export class UserService {
     user: UserDto,
     selectedUser: UserDto
   ): Promise<boolean> {
-    // user is follower, selectedUser is the followee.
     const followEntity: FollowEntity = {
       followerName: user.firstName,
       followerHandle: user.alias,
@@ -41,8 +40,6 @@ export class UserService {
     } else {
       return true;
     }
-
-    // return FakeData.instance.isFollower();
   }
 
   public async getFolloweeCount(token: string, user: UserDto): Promise<number> {
@@ -81,10 +78,6 @@ export class UserService {
     token: string,
     userToUnfollow: UserDto
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // // Pause so we can see the unfollow message. Remove when connected to the server
-    // await new Promise((f) => setTimeout(f, 2000));
-
-    // TODO: Call the server
     const authToken = await this.authDao.getAuth(token);
     const followerAlias = authToken!.alias;
     const follower = await this.userDao.getUser(followerAlias);
