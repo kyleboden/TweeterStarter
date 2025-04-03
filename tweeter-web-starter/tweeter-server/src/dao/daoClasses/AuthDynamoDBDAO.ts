@@ -74,11 +74,13 @@ export class AuthDynamoDBDAO implements AuthDAO {
   public async updateAuth(token: string, timestamp: number): Promise<void> {
     const params = {
       TableName: this.tableName,
-      Key: { [this.tokenAttr]: token },
+      Key: {
+        [this.tokenAttr]: token,
+      },
       ExpressionAttributeValues: {
         ":timestamp": timestamp,
       },
-      UpdateExpression: "SET " + this.timestampAttr + " = :timestamp, ",
+      UpdateExpression: "SET " + this.timestampAttr + " = :timestamp",
     };
     await this.client.send(new UpdateCommand(params));
   }

@@ -14,7 +14,7 @@ export const handler = async (request: LoginRequest): Promise<AuthResponse> => {
       success: true,
       message: null,
       user: userDto,
-      authToken: authToken,
+      token: authToken.token,
     };
   } catch (error) {
     return {
@@ -22,7 +22,7 @@ export const handler = async (request: LoginRequest): Promise<AuthResponse> => {
       message:
         error instanceof Error ? error.message : "An unknown error occured",
       user: null,
-      authToken: null,
+      token: null,
     };
   }
 };

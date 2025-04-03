@@ -19,7 +19,7 @@ export const handler = async (
       success: true,
       message: null,
       user: userDto,
-      authToken: authToken,
+      token: authToken.token,
     };
   } catch (error) {
     return {
@@ -27,7 +27,7 @@ export const handler = async (
       message:
         error instanceof Error ? error.message : "An unknown error occured",
       user: null,
-      authToken: null,
+      token: null,
     };
   }
 };

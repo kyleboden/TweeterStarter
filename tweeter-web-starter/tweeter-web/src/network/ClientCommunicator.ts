@@ -28,7 +28,7 @@ export class ClientCommunicator {
       headers,
       req ? JSON.stringify(req) : req
     );
-    
+
     console.log(`Fetching '${url}' with params '${JSON.stringify(params)}'`);
 
     try {
@@ -36,6 +36,7 @@ export class ClientCommunicator {
 
       if (resp.ok) {
         // Be careful with the return type here. resp.json() returns Promise<any> which means there is no type checking on response.
+        console.log("response: ", resp);
         const response: RES = await resp.json();
         return response;
       } else {

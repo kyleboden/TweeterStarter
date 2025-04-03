@@ -83,6 +83,7 @@ const UserInfoProvider: React.FC<Props> = ({ children }) => {
     authToken: AuthToken,
     remember: boolean
   ) => {
+    // console.log("authoken in userinfoProvider: ", authToken);
     setUserInfo({
       ...userInfo,
       currentUser: currentUser,
@@ -96,6 +97,8 @@ const UserInfoProvider: React.FC<Props> = ({ children }) => {
   };
 
   const clearUserInfo = () => {
+    console.log("clearUserInfo about to be called");
+
     setUserInfo({
       ...userInfo,
       currentUser: null,

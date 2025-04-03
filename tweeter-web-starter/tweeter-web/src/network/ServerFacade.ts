@@ -22,7 +22,6 @@ import {
 import { ClientCommunicator } from "./ClientCommunicator";
 import bcrypt from "bcryptjs";
 
-
 export class ServerFacade {
   private SERVER_URL =
     "https://r4ua982xo9.execute-api.us-east-1.amazonaws.com/dev";
@@ -232,8 +231,11 @@ export class ServerFacade {
 
     // Handle errors
     if (response.success) {
-      if (response.user && response.authToken) {
-        return [User.fromDto(response.user)!, response.authToken];
+      if (response.user && response.token) {
+        return [
+          User.fromDto(response.user)!,
+          new AuthToken(response.token, Date.now()),
+        ];
       } else {
         throw new Error(`Error Logging in`);
       }
@@ -251,8 +253,11 @@ export class ServerFacade {
 
     // Handle errors
     if (response.success) {
-      if (response.user && response.authToken) {
-        return [User.fromDto(response.user)!, response.authToken];
+      if (response.user && response.token) {
+        return [
+          User.fromDto(response.user)!,
+          new AuthToken(response.token, Date.now()),
+        ];
       } else {
         throw new Error("Error Registering");
       }
@@ -286,11 +291,18 @@ export class ServerFacade {
       GetUserResponse
     >(request, "/getUser/list");
 
+    console.log("request in serverFacade: ", request);
+    console.log("response in serverFacade: ", response);
+
     // Handle errors
     if (!response.success) {
       console.error(response);
-      throw new Error(response.message ?? "Unknown errorr");
+      throw new Error(response.message ?? "Unknown error");
     } else {
+      console.log(
+        "user.fromDto in serverFacade: ",
+        User.fromDto(response.user)
+      );
       return User.fromDto(response.user);
     }
   }
