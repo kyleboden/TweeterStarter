@@ -6,16 +6,20 @@ import { UserEntity } from "../../dao/entity/UserEntity";
 import { AuthEntity } from "../../dao/entity/AuthEntity";
 import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
 import bcrypt from "bcryptjs";
+import { FollowsDAO } from "../../dao/daoInterfaces/FollowsDAO";
+import { FollowEntity } from "../../dao/entity/FollowEntity";
 
 export class UserService {
   private userDao: UserDAO;
   private authDao: AuthDAO;
   private imageDao: ImageDAO;
+  private followsDao: FollowsDAO;
 
   constructor(factory: Factory) {
     this.userDao = factory.getUserDAO();
     this.authDao = factory.getAuthDAO();
     this.imageDao = factory.getImageDAO();
+    this.followsDao = factory.getFollowsDAO();
   }
 
   public async getIsFollowerStatus(
@@ -40,10 +44,17 @@ export class UserService {
     token: string,
     userToFollow: UserDto
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the follow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    const authToken = await this.authDao.getAuth(token);
+    const followerAlias = authToken!.alias;
+    const follower = await this.userDao.getUser(followerAlias);
 
-    // TODO: Call the server
+    const followEntity: FollowEntity = {
+      followerName: follower!.firstName,
+      followerHandle: followerAlias,
+      followeeName: userToFollow.firstName,
+      followeeHandle: userToFollow.alias,
+    };
+    this.followsDao.putFollower(followEntity);
 
     const followerCount = await this.getFollowerCount(token, userToFollow);
     const followeeCount = await this.getFolloweeCount(token, userToFollow);

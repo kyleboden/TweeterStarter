@@ -7,7 +7,7 @@ import {
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { Follower } from "../entity/Follower";
+import { FollowEntity } from "../entity/FollowEntity";
 import { DataPage } from "../entity/DataPage";
 import { FollowsDAO } from "../daoInterfaces/FollowsDAO";
 
@@ -21,7 +21,7 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
-  public async putFollower(follower: Follower): Promise<void> {
+  public async putFollower(follower: FollowEntity): Promise<void> {
     const params = {
       TableName: this.tableName,
       Item: {
@@ -44,7 +44,7 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
   }
 
   public async updateFollower(
-    follower: Follower,
+    follower: FollowEntity,
     newFollowerName: string,
     newFolloweeName: string
   ): Promise<void> {
@@ -65,7 +65,9 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
     await this.client.send(new UpdateCommand(params));
   }
 
-  public async getFollower(follower: Follower): Promise<Follower | undefined> {
+  public async getFollower(
+    follower: FollowEntity
+  ): Promise<FollowEntity | undefined> {
     const params = {
       TableName: this.tableName,
       Key: this.generateFollowItem(follower),
@@ -81,7 +83,7 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
         };
   }
 
-  public async deleteFollower(follower: Follower): Promise<void> {
+  public async deleteFollower(follower: FollowEntity): Promise<void> {
     const params = {
       TableName: this.tableName,
       Key: this.generateFollowItem(follower),
@@ -89,7 +91,7 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
     await this.client.send(new DeleteCommand(params));
   }
 
-  private generateFollowItem(follower: Follower) {
+  private generateFollowItem(follower: FollowEntity) {
     return {
       [this.followerHandleAttr]: follower.followerHandle,
       [this.followeeHandleAttr]: follower.followeeHandle,
@@ -100,7 +102,7 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
     followerHandle: string,
     pageSize: number,
     lastFolloweeHandle: string | undefined
-  ): Promise<DataPage<Follower>> {
+  ): Promise<DataPage<FollowEntity>> {
     const params = {
       KeyConditionExpression: this.followerHandleAttr + " = :f",
       ExpressionAttributeValues: {
@@ -124,7 +126,7 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
     followeeHandle: string,
     pageSize: number,
     lastFollowerHandle: string | undefined
-  ): Promise<DataPage<Follower>> {
+  ): Promise<DataPage<FollowEntity>> {
     const params = {
       KeyConditionExpression: this.followeeHandleAttr + " = :fol",
       ExpressionAttributeValues: {
@@ -145,8 +147,10 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
     return await this.executeFollowQuery(params);
   }
 
-  private async executeFollowQuery(params: any): Promise<DataPage<Follower>> {
-    const items: Follower[] = [];
+  private async executeFollowQuery(
+    params: any
+  ): Promise<DataPage<FollowEntity>> {
+    const items: FollowEntity[] = [];
     const data = await this.client.send(new QueryCommand(params));
     const hasMorePages = data.LastEvaluatedKey !== undefined;
 
@@ -159,6 +163,6 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
       })
     );
 
-    return new DataPage<Follower>(items, hasMorePages);
+    return new DataPage<FollowEntity>(items, hasMorePages);
   }
 }

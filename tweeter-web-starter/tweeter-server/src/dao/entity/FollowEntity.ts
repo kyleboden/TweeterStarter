@@ -1,4 +1,4 @@
-export type Follower = {
+export type FollowEntity = {
   followerName: string;
   followerHandle: string;
   followeeName: string;

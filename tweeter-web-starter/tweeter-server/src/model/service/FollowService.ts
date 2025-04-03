@@ -3,7 +3,7 @@ import { Factory } from "../../factory/Factory";
 import { FollowsDAO } from "../../dao/daoInterfaces/FollowsDAO";
 import { UserDAO } from "../../dao/daoInterfaces/UserDAO";
 import { DataPage } from "../../dao/entity/DataPage";
-import { Follower } from "../../dao/entity/Follower";
+import { FollowEntity } from "../../dao/entity/FollowEntity";
 import { UserEntity } from "../../dao/entity/UserEntity";
 import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
 
@@ -24,7 +24,7 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDto | null
   ): Promise<[UserDto[], boolean]> {
-    const dataPage: DataPage<Follower> =
+    const dataPage: DataPage<FollowEntity> =
       await this.followsDAO.getPageOfFollowers(
         userAlias,
         pageSize,
@@ -66,7 +66,7 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDto | null
   ): Promise<[UserDto[], boolean]> {
-    const dataPage: DataPage<Follower> =
+    const dataPage: DataPage<FollowEntity> =
       await this.followsDAO.getPageOfFollowees(
         userAlias,
         pageSize,
