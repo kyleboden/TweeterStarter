@@ -14,12 +14,14 @@ export class UserService {
   private authDao: AuthDAO;
   private imageDao: ImageDAO;
   private followsDao: FollowsDAO;
+  private authDAO: AuthDAO;
 
   constructor(factory: Factory) {
     this.userDao = factory.getUserDAO();
     this.authDao = factory.getAuthDAO();
     this.imageDao = factory.getImageDAO();
     this.followsDao = factory.getFollowsDAO();
+    this.authDAO = factory.getAuthDAO();
   }
 
   public async getIsFollowerStatus(
@@ -27,6 +29,11 @@ export class UserService {
     user: UserDto,
     selectedUser: UserDto
   ): Promise<boolean> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const followEntity: FollowEntity = {
       followerName: user.firstName,
       followerHandle: user.alias,
@@ -43,11 +50,21 @@ export class UserService {
   }
 
   public async getFolloweeCount(token: string, user: UserDto): Promise<number> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const followees = await this.followsDao.getAllFollowees(user.alias);
     return followees.values.length;
   }
 
   public async getFollowerCount(token: string, user: UserDto): Promise<number> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const followers = await this.followsDao.getAllFollowers(user.alias);
     return followers.values.length;
   }
@@ -56,6 +73,11 @@ export class UserService {
     token: string,
     userToFollow: UserDto
   ): Promise<[followerCount: number, followeeCount: number]> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const authToken = await this.authDao.getAuth(token);
     const followerAlias = authToken!.alias;
     const follower = await this.userDao.getUser(followerAlias);
@@ -78,6 +100,11 @@ export class UserService {
     token: string,
     userToUnfollow: UserDto
   ): Promise<[followerCount: number, followeeCount: number]> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const authToken = await this.authDao.getAuth(token);
     const followerAlias = authToken!.alias;
     const follower = await this.userDao.getUser(followerAlias);
@@ -100,6 +127,11 @@ export class UserService {
     alias: string,
     password: string
   ): Promise<[UserDto, AuthToken]> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const userEntity: UserEntity | undefined = await this.userDao.getUser(
       alias
     );
@@ -142,6 +174,11 @@ export class UserService {
     userImageBytes: string,
     imageFileExtension: string
   ): Promise<[UserDto, AuthToken]> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     if ((await this.userDao.getUser(alias)) != undefined) {
       throw new Error("Invalid registration");
     }
@@ -179,6 +216,11 @@ export class UserService {
   }
 
   public async logout(token: string): Promise<void> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const validAuth = await this.authDao.checkAuth(token);
     if (!validAuth) {
       throw new Error("Error logging out");
@@ -189,6 +231,11 @@ export class UserService {
   }
 
   public async getUser(token: string, alias: string): Promise<UserDto | null> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const userEntity = await this.userDao.getUser(alias);
 
     if (!userEntity) {

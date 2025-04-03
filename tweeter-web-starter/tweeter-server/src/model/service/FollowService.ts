@@ -6,16 +6,19 @@ import { DataPage } from "../../dao/entity/DataPage";
 import { FollowEntity } from "../../dao/entity/FollowEntity";
 import { UserEntity } from "../../dao/entity/UserEntity";
 import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
+import { AuthDAO } from "../../dao/daoInterfaces/AuthDAO";
 
 export class FollowService {
   private followsDAO: FollowsDAO;
   private userDAO: UserDAO;
   private imageDAO: ImageDAO;
+  private authDAO: AuthDAO;
 
   constructor(factory: Factory) {
     this.followsDAO = factory.getFollowsDAO();
     this.userDAO = factory.getUserDAO();
     this.imageDAO = factory.getImageDAO();
+    this.authDAO = factory.getAuthDAO();
   }
 
   public async loadMoreFollowers(
@@ -24,6 +27,11 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDto | null
   ): Promise<[UserDto[], boolean]> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const dataPage: DataPage<FollowEntity> =
       await this.followsDAO.getPageOfFollowers(
         userAlias,
@@ -66,6 +74,11 @@ export class FollowService {
     pageSize: number,
     lastItem: UserDto | null
   ): Promise<[UserDto[], boolean]> {
+    const isValidAuth = await this.authDAO.checkAuth(token);
+    if (!isValidAuth) {
+      throw new Error("Error authenticating, please login again");
+    }
+
     const dataPage: DataPage<FollowEntity> =
       await this.followsDAO.getPageOfFollowees(
         userAlias,
