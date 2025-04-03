@@ -57,7 +57,7 @@ export class UserService {
     authToken: AuthToken,
     userToFollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
-    console.log("about to call facade in follow");
+    console.log("about to call facade in follow!!");
     const facade = new ServerFacade();
     const request: UserRequest = {
       token: authToken.token,
@@ -70,13 +70,13 @@ export class UserService {
     authToken: AuthToken,
     userToUnfollow: User
   ): Promise<[followerCount: number, followeeCount: number]> {
-    console.log("about to call facade in follow");
+    console.log("about to call facade in unfollow");
     const facade = new ServerFacade();
     const request: UserRequest = {
       token: authToken.token,
       user: userToUnfollow.dto,
     };
-    return facade.follow(request);
+    return facade.unfollow(request);
   }
 
   public async login(

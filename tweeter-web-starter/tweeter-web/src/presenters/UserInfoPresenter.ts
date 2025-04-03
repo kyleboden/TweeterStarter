@@ -64,10 +64,20 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
       this._view.setIsLoading(true);
       this._view.displayInfoMessage(`${action} ${displayedUser!.name}...`, 0);
 
-      const [followerCount, followeeCount] = await this._userService.follow(
-        authToken!,
-        displayedUser!
-      );
+      let followerCount: number;
+      let followeeCount: number;
+
+      if (isFollower) {
+        [followerCount, followeeCount] = await this._userService.follow(
+          authToken!,
+          displayedUser!
+        );
+      } else {
+        [followerCount, followeeCount] = await this._userService.unfollow(
+          authToken!,
+          displayedUser!
+        );
+      }
 
       this._view.setIsFollower(isFollower);
       this._view.setFollowerCount(followerCount);
@@ -99,7 +109,7 @@ export class UserInfoPresenter extends Presenter<UserInfoView> {
     this.actionDisplayedUser(
       authToken,
       displayedUser,
-      "Unollowing",
+      "Unfollowing",
       "unfollow user",
       false
     );

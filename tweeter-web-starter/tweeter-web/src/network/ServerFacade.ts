@@ -208,6 +208,7 @@ export class ServerFacade {
   }
 
   public async unfollow(request: UserRequest): Promise<[number, number]> {
+    console.log("about to unfollow in serverfacade, request: ", request);
     const response = await this.clientCommunicator.doPost<
       UserRequest,
       FollowResponse

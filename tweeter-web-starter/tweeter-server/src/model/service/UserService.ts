@@ -66,10 +66,21 @@ export class UserService {
     token: string,
     userToUnfollow: UserDto
   ): Promise<[followerCount: number, followeeCount: number]> {
-    // Pause so we can see the unfollow message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    // // Pause so we can see the unfollow message. Remove when connected to the server
+    // await new Promise((f) => setTimeout(f, 2000));
 
     // TODO: Call the server
+    const authToken = await this.authDao.getAuth(token);
+    const followerAlias = authToken!.alias;
+    const follower = await this.userDao.getUser(followerAlias);
+
+    const followEntity: FollowEntity = {
+      followerName: follower!.firstName,
+      followerHandle: followerAlias,
+      followeeName: userToUnfollow.firstName,
+      followeeHandle: userToUnfollow.alias,
+    };
+    this.followsDao.deleteFollower(followEntity);
 
     const followerCount = await this.getFollowerCount(token, userToUnfollow);
     const followeeCount = await this.getFolloweeCount(token, userToUnfollow);
@@ -170,8 +181,6 @@ export class UserService {
   }
 
   public async getUser(token: string, alias: string): Promise<UserDto | null> {
-    // TODO: Replace with the result of calling server
-    // return FakeData.instance.findUserByAlias(alias)?.dto || null
     const userEntity = await this.userDao.getUser(alias);
 
     if (!userEntity) {
