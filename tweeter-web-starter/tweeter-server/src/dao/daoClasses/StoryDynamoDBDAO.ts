@@ -1,6 +1,6 @@
 import { DynamoDBDocumentClient, PutCommand } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
-import { StatusEntity } from "../entity/StoryEntity";
+import { StatusEntity } from "../entity/StatusEntity";
 import { DataPage } from "../entity/DataPage";
 import { StoryDAO } from "../daoInterfaces/StoryDAO";
 
@@ -17,7 +17,7 @@ export class StoryDynamoDBDAO implements StoryDAO {
       TableName: this.tableName,
       Item: {
         [this.aliasAttr]: story.alias,
-        [this.timestampAttr]: story.timestamp,
+        [this.timestampAttr]: story.timestamp.toString(),
         [this.postAttr]: story.post,
       },
     };

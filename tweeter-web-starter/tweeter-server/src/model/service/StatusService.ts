@@ -9,7 +9,7 @@ import { StoryDAO } from "../../dao/daoInterfaces/StoryDAO";
 import { ImageDAO } from "../../dao/daoInterfaces/ImageDAO";
 import { UserDAO } from "../../dao/daoInterfaces/UserDAO";
 import { Factory } from "../../factory/Factory";
-import { StatusEntity } from "../../dao/entity/StoryEntity";
+import { StatusEntity } from "../../dao/entity/StatusEntity";
 import { DataPage } from "../../dao/entity/DataPage";
 
 export class StatusService {
@@ -73,10 +73,14 @@ export class StatusService {
     token: string,
     newStatus: StatusDto
   ): Promise<boolean> {
-    // Pause so we can see the logging out message. Remove when connected to the server
-    await new Promise((f) => setTimeout(f, 2000));
+    const statusEntity: StatusEntity = {
+      alias: newStatus.user.alias,
+      timestamp: newStatus.timestamp,
+      post: newStatus.post,
+    };
+
+    await this.storyDAO.putStory(statusEntity);
     return true;
-    // TODO: Call the server to post the status
   }
 
   private async getFakeData(

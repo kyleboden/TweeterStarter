@@ -102,17 +102,17 @@ export class FollowService {
     return [userDtoArray, dataPage.hasMorePages];
   }
 
-  private async getFakeData(
-    lastItem: UserDto | null,
-    pageSize: number,
-    userAlias: string
-  ): Promise<[UserDto[], boolean]> {
-    const [items, hasMore] = FakeData.instance.getPageOfUsers(
-      User.fromDto(lastItem),
-      pageSize,
-      userAlias
-    );
-    const dtos = items.map((user) => user.dto);
-    return [dtos, hasMore];
-  }
+  // private async getFakeData(
+  //   lastItem: UserDto | null,
+  //   pageSize: number,
+  //   userAlias: string
+  // ): Promise<[UserDto[], boolean]> {
+  //   const [items, hasMore] = FakeData.instance.getPageOfUsers(
+  //     User.fromDto(lastItem),
+  //     pageSize,
+  //     userAlias
+  //   );
+  //   const dtos = items.map((user) => user.dto);
+  //   return [dtos, hasMore];
+  // }
 }

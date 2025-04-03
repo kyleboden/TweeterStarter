@@ -1,9 +1,9 @@
 import { DataPage } from "../entity/DataPage";
 import { StatusEntity } from "../entity/StatusEntity";
 
-export interface StoryDAO {
-  putStory(story: StatusEntity): Promise<void>;
-  getPageOfStories(
+export interface FeedDAO {
+  putFeed(feed: StatusEntity): Promise<void>;
+  getPageOfFeeds(
     alias: string,
     pageSize: number,
     timestamp: number | undefined

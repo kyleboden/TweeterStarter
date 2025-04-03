@@ -1,3 +1,4 @@
+import { StatusDto, UserDto } from "tweeter-shared";
 import { AuthDynamoDBDAO } from "../dao/daoClasses/AuthDynamoDBDAO";
 import { StoryDynamoDBDAO } from "../dao/daoClasses/StoryDynamoDBDAO";
 import { DynamoDBFactory } from "../factory/DynamoDBFactory";
@@ -10,7 +11,22 @@ const storyDao = new StoryDynamoDBDAO();
 
 async function main() {
   const statusService = new StatusService(new DynamoDBFactory());
-  const res = await statusService.loadMoreStoryItems("token", "k", 10, null);
+  // const res = await statusService.loadMoreStoryItems("token", "k", 10, null);
+  // console.log("res: ", res);
+
+  const userDto: UserDto = {
+    firstName: "b",
+    lastName: "b",
+    alias: "b",
+    imageUrl: "imageurl",
+  };
+
+  const statusDto: StatusDto = {
+    post: "test post",
+    user: userDto,
+    timestamp: 1234213451,
+  };
+  const res = await statusService.postStatus("token", statusDto);
   console.log("res: ", res);
 }
 
