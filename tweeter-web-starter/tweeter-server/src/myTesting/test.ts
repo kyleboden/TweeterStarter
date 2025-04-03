@@ -49,31 +49,37 @@ async function main() {
   // };
   // await followDao.deleteFollower(follower);
 
-  let userService = new UserService(new DynamoDBFactory());
-  let alias = "a";
-  let fileName = `${alias}_Image`;
-  let imageUrl = await imageDao.getImage(fileName);
+  // let userService = new UserService(new DynamoDBFactory());
+  // let alias = "a";
+  // let fileName = `${alias}_Image`;
+  // let imageUrl = await imageDao.getImage(fileName);
 
-  const user1Dto: UserDto = {
-    firstName: "a",
-    lastName: "a",
-    alias: "@a",
-    imageUrl: imageUrl,
-  };
-  const tokena = "$2b$10$yvQ/Hx6t.FQRKnW69bsyw.EAaCrf5n75pd0QPCAfNwOrDsoqegWYO";
+  // const user1Dto: UserDto = {
+  //   firstName: "a",
+  //   lastName: "a",
+  //   alias: "@a",
+  //   imageUrl: imageUrl,
+  // };
+  // const tokena = "$2b$10$yvQ/Hx6t.FQRKnW69bsyw.EAaCrf5n75pd0QPCAfNwOrDsoqegWYO";
 
-  alias = "b";
-  fileName = `${alias}_Image`;
-  imageUrl = await imageDao.getImage(fileName);
-  const user2: UserDto = {
-    firstName: "b",
-    lastName: "b",
-    alias: "@b",
-    imageUrl: imageUrl,
-  };
-  const tokenb = "$2b$10$QH4fQeEcm.6cKVJFHKQVeO1/t5E.NeP982IaBMtw9HjwN27lgiF5q";
+  // alias = "b";
+  // fileName = `${alias}_Image`;
+  // imageUrl = await imageDao.getImage(fileName);
+  // const user2: UserDto = {
+  //   firstName: "b",
+  //   lastName: "b",
+  //   alias: "@b",
+  //   imageUrl: imageUrl,
+  // };
+  // const tokenb = "$2b$10$QH4fQeEcm.6cKVJFHKQVeO1/t5E.NeP982IaBMtw9HjwN27lgiF5q";
 
-  await userService.follow(tokena, user2);
+  // await userService.follow(tokena, user2);
+
+  const followers = await followDao.getAllFollowers("@ClintEastwood");
+  console.log("Number of Followers: ", followers.values.length);
+
+  const followees = await followDao.getAllFollowees("@FredFlintstone");
+  console.log("Number of Followees: ", followees.values.length);
 }
 main().catch(console.error);
 

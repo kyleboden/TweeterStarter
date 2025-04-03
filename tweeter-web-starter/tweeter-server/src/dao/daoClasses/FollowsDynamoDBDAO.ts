@@ -147,6 +147,35 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
     return await this.executeFollowQuery(params);
   }
 
+  public async getAllFollowers(
+    followeeHandle: string
+  ): Promise<DataPage<FollowEntity>> {
+    const params = {
+      KeyConditionExpression: this.followeeHandleAttr + " = :fol",
+      ExpressionAttributeValues: {
+        ":fol": followeeHandle,
+      },
+      TableName: this.tableName,
+      IndexName: this.indexName,
+    };
+
+    return await this.executeFollowQuery(params);
+  }
+
+  public async getAllFollowees(
+    followerHandle: string
+  ): Promise<DataPage<FollowEntity>> {
+    const params = {
+      KeyConditionExpression: this.followerHandleAttr + " = :f",
+      ExpressionAttributeValues: {
+        ":f": followerHandle,
+      },
+      TableName: this.tableName,
+    };
+
+    return await this.executeFollowQuery(params);
+  }
+
   private async executeFollowQuery(
     params: any
   ): Promise<DataPage<FollowEntity>> {

@@ -27,17 +27,32 @@ export class UserService {
     user: UserDto,
     selectedUser: UserDto
   ): Promise<boolean> {
-    return FakeData.instance.isFollower();
+    // user is follower, selectedUser is the followee.
+    const followEntity: FollowEntity = {
+      followerName: user.firstName,
+      followerHandle: user.alias,
+      followeeName: selectedUser.firstName,
+      followeeHandle: selectedUser.alias,
+    };
+    const follower = await this.followsDao.getFollower(followEntity);
+
+    if (!follower) {
+      return false;
+    } else {
+      return true;
+    }
+
+    // return FakeData.instance.isFollower();
   }
 
   public async getFolloweeCount(token: string, user: UserDto): Promise<number> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getFolloweeCount(User.fromDto(user)!.alias);
+    const followees = await this.followsDao.getAllFollowees(user.alias);
+    return followees.values.length;
   }
 
   public async getFollowerCount(token: string, user: UserDto): Promise<number> {
-    // TODO: Replace with the result of calling server
-    return FakeData.instance.getFollowerCount(User.fromDto(user)!.alias);
+    const followers = await this.followsDao.getAllFollowers(user.alias);
+    return followers.values.length;
   }
 
   public async follow(
