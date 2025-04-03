@@ -43,7 +43,6 @@ export class FollowService {
       aliases.push(follower.followerHandle);
     }
 
-    // const aliases = dataPage.values
     const userDtoArray: UserDto[] = [];
     for (const alias of aliases) {
       const userEntity: UserEntity | undefined = await this.userDAO.getUser(
@@ -90,7 +89,6 @@ export class FollowService {
       aliases.push(followee.followeeHandle);
     }
 
-    // const aliases = dataPage.values
     const userDtoArray: UserDto[] = [];
     for (const alias of aliases) {
       const userEntity: UserEntity | undefined = await this.userDAO.getUser(
@@ -114,18 +112,4 @@ export class FollowService {
 
     return [userDtoArray, dataPage.hasMorePages];
   }
-
-  // private async getFakeData(
-  //   lastItem: UserDto | null,
-  //   pageSize: number,
-  //   userAlias: string
-  // ): Promise<[UserDto[], boolean]> {
-  //   const [items, hasMore] = FakeData.instance.getPageOfUsers(
-  //     User.fromDto(lastItem),
-  //     pageSize,
-  //     userAlias
-  //   );
-  //   const dtos = items.map((user) => user.dto);
-  //   return [dtos, hasMore];
-  // }
 }

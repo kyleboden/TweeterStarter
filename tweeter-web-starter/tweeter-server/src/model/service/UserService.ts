@@ -127,11 +127,6 @@ export class UserService {
     alias: string,
     password: string
   ): Promise<[UserDto, AuthToken]> {
-    const isValidAuth = await this.authDAO.checkAuth(token);
-    if (!isValidAuth) {
-      throw new Error("Error authenticating, please login again");
-    }
-
     const userEntity: UserEntity | undefined = await this.userDao.getUser(
       alias
     );
@@ -174,11 +169,6 @@ export class UserService {
     userImageBytes: string,
     imageFileExtension: string
   ): Promise<[UserDto, AuthToken]> {
-    const isValidAuth = await this.authDAO.checkAuth(token);
-    if (!isValidAuth) {
-      throw new Error("Error authenticating, please login again");
-    }
-
     if ((await this.userDao.getUser(alias)) != undefined) {
       throw new Error("Invalid registration");
     }
