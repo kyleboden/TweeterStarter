@@ -38,38 +38,17 @@ export class StatusService {
     pageSize: number,
     lastItem: StatusDto | null
   ): Promise<[StatusDto[], boolean]> {
-    const isValidAuth = await this.authDAO.checkAuth(token);
-    if (!isValidAuth) {
-      throw new Error("Error authenticating, please login again");
+    if (!(await this.authDAO.checkAuth(token))) {
+      throw new Error("Error Authenticating. Login again");
     }
 
-    const dataPage: DataPage<StatusEntity> = await this.feedDAO.getPageOfFeeds(
+    const dataPage: DataPage<StatusDto> = await this.feedDAO.getPageOfFeeds(
       userAlias,
       pageSize,
       lastItem?.timestamp
     );
-    const statusDtoArray: StatusDto[] = [];
 
-    for (const statusEntity of dataPage.values) {
-      const userEntity = await this.userDAO.getUser(statusEntity.alias);
-      const fileName = `${userAlias}_Image`;
-      const imageUrl = await this.imageDAO.getImage(fileName);
-
-      const userDto: UserDto = {
-        firstName: userEntity!.firstName,
-        lastName: userEntity!.lastName,
-        alias: userEntity!.alias,
-        imageUrl: imageUrl,
-      };
-
-      const statusDto: StatusDto = {
-        post: statusEntity.post,
-        user: userDto,
-        timestamp: statusEntity.timestamp,
-      };
-      statusDtoArray.push(statusDto);
-    }
-    return [statusDtoArray, dataPage.hasMorePages];
+    return [dataPage.values, dataPage.hasMorePages];
   }
 
   public async loadMoreStoryItems(
@@ -131,18 +110,14 @@ export class StatusService {
 
     await this.storyDAO.putStory(statusEntity);
 
-    // todo: implement putFeed
-    // for every follower of alias, put feed
-    const dataPage = await this.followDAO.getAllFollowers(newStatus.user.alias);
+    const dataPage = await this.followDAO.getAllFollowers(statusEntity.alias);
     const followers: FollowEntity[] = dataPage.values;
     for (const entity of followers) {
-      const followerStatusEntity: StatusEntity = {
-        alias: entity.followerHandle,
-        timestamp: newStatus.timestamp,
-        post: newStatus.post,
-      };
-      await this.feedDAO.putFeed(followerStatusEntity);
+      const followerAlias: string = entity.followerHandle;
+      console.log("in postStatus followerAlias: ", followerAlias);
+      await this.feedDAO.putFeed(newStatus, followerAlias);
     }
+
     return true;
   }
 }
