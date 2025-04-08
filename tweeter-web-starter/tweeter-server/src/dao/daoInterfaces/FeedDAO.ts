@@ -4,6 +4,7 @@ import { StatusEntity } from "../entity/StatusEntity";
 
 export interface FeedDAO {
   putFeed(feed: StatusDto, followerAlias: string): Promise<void>;
+  putFeedBatch(feed: StatusDto, followerList: string[]): Promise<void>;
   getPageOfFeeds(
     alias: string,
     pageSize: number,

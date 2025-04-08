@@ -121,13 +121,11 @@ export class StatusService {
     return true;
   }
 
-  public async postFeed(
+  public async updateFeed(
     followerList: string[],
     statusDto: StatusDto
   ): Promise<void> {
-    for (const followerAlias of followerList) {
-      console.log("in postStatus followerAlias: ", followerAlias);
-      await this.feedDAO.putFeed(statusDto, followerAlias);
-    }
+    console.log("in postStatus followerAlias: ", followerList);
+    await this.feedDAO.putFeedBatch(statusDto, followerList);
   }
 }
