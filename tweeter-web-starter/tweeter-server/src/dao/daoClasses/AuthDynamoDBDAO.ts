@@ -17,7 +17,7 @@ export class AuthDynamoDBDAO implements AuthDAO {
   readonly aliasAttr = "alias";
   readonly tokenAttr = "token";
   readonly timestampAttr = "time_stamp";
-  readonly timeout = 60000;
+  readonly timeout = 6000000;
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 

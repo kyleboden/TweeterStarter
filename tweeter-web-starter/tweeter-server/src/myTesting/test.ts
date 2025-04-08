@@ -9,6 +9,7 @@ import { ImageS3DAO } from "../dao/daoClasses/ImageS3DAO";
 import { UserDynamoDBDAO } from "../dao/daoClasses/UserDynamoDBDAO";
 import { UserService } from "../model/service/UserService";
 import { FeedDynamoDBDAO } from "../dao/daoClasses/FeedDynamoDBDAO";
+import { FollowService } from "../model/service/FollowService";
 
 // //  npx ts-node src/myTesting/test.ts
 
@@ -91,37 +92,15 @@ const feedDao = new FeedDynamoDBDAO();
 // // console.log(storyDao.getPageOfStories("k", 10, 1743625556502));
 
 (async () => {
-  try {
-    const statusService: StatusService = new StatusService(
-      new DynamoDBFactory()
-    );
-    const userDto: UserDto = {
-      alias: "@a",
-      firstName: "a",
-      lastName: "a",
-      imageUrl: "yeet",
-    };
-    const statusDto: StatusDto = {
-      post: "here i my test post",
-      user: userDto,
-      timestamp: 333,
-    };
+  const followService: FollowService = new FollowService(new DynamoDBFactory());
+  const userAlias = "@b";
+  const size = 100;
+  const lastAlias = undefined;
 
-    // const res = await statusService.postStatus(
-    //   "9f96ac4d-ac39-455d-86d4-9e2e1ccedad6",
-    //   statusDto
-    // );
-    const feedDao = new FeedDynamoDBDAO();
-
-    const res = await feedDao.getPageOfFeeds(
-      userDto.alias,
-      10,
-      statusDto.timestamp
-    );
-    console.log("Query Result:", res);
-  } catch (error) {
-
-
-    console.error("Error:", error);
-  }
+  const followerList: string[] = await followService.getBatch(
+    userAlias,
+    size,
+    lastAlias
+  );
+  console.log("followerList: ", followerList);
 })();

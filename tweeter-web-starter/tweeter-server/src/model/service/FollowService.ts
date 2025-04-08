@@ -112,4 +112,19 @@ export class FollowService {
 
     return [userDtoArray, dataPage.hasMorePages];
   }
+
+  public async getBatch(
+    userAlias: string,
+    size: number,
+    lastAlias: string | undefined
+  ): Promise<string[]> {
+    const dataPage: DataPage<FollowEntity> =
+      await this.followsDAO.getPageOfFollowers(userAlias, size, lastAlias);
+    const aliases: string[] = [];
+    for (const follower of dataPage.values) {
+      aliases.push(follower.followerHandle);
+    }
+
+    return aliases;
+  }
 }

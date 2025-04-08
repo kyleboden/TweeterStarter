@@ -110,14 +110,17 @@ export class StatusService {
 
     await this.storyDAO.putStory(statusEntity);
 
-    const dataPage = await this.followDAO.getAllFollowers(statusEntity.alias);
-    const followers: FollowEntity[] = dataPage.values;
-    for (const entity of followers) {
-      const followerAlias: string = entity.followerHandle;
-      console.log("in postStatus followerAlias: ", followerAlias);
-      await this.feedDAO.putFeed(newStatus, followerAlias);
-    }
+    // const dataPage = await this.followDAO.getAllFollowers(statusEntity.alias);
+    // const followers: FollowEntity[] = dataPage.values;
+    // for (const entity of followers) {
+    //   const followerAlias: string = entity.followerHandle;
+    //   console.log("in postStatus followerAlias: ", followerAlias);
+    //   await this.feedDAO.putFeed(newStatus, followerAlias);
+    // }
 
     return true;
   }
+
+
+
 }
