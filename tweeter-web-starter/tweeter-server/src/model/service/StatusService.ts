@@ -121,6 +121,13 @@ export class StatusService {
     return true;
   }
 
-
-
+  public async postFeed(
+    followerList: string[],
+    statusDto: StatusDto
+  ): Promise<void> {
+    for (const followerAlias of followerList) {
+      console.log("in postStatus followerAlias: ", followerAlias);
+      await this.feedDAO.putFeed(statusDto, followerAlias);
+    }
+  }
 }
