@@ -3,6 +3,7 @@ import {
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { UserDAO } from "../daoInterfaces/UserDAO";
 import { UserEntity } from "../entity/UserEntity";
@@ -16,6 +17,8 @@ export class UserDynamoDBDAO implements UserDAO {
   readonly lastNameAttr = "lastName";
   readonly userImageBytesAttr = "userImageBytes";
   readonly imageFileExtensionAttr = "imageFileExtension";
+  readonly followerCountAttr = "follower_count";
+  readonly followeeCountAttr = "followee_count";
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
@@ -55,8 +58,80 @@ export class UserDynamoDBDAO implements UserDAO {
           password: output.Item[this.passwordAttr],
           firstName: output.Item[this.firstNameAttr],
           lastName: output.Item[this.lastNameAttr],
-          // userImageBytes: output.Item[this.userImageBytesAttr],
-          // imageFileExtension: output.Item[this.imageFileExtensionAttr],
+          followeeCount: output.Item[this.followeeCountAttr],
+          followerCount: output.Item[this.followerCountAttr],
         };
+  }
+
+  async getFolloweeCount(userHandle: string): Promise<number> {
+    const data = await this.client.send(
+      new GetCommand({
+        TableName: this.tableName,
+        Key: { [this.aliasAttr]: userHandle },
+        ProjectionExpression: "followee_count",
+      })
+    );
+
+    return data.Item?.followee_count ?? 0;
+  }
+
+  async getFollowerCount(userHandle: string): Promise<number> {
+    const data = await this.client.send(
+      new GetCommand({
+        TableName: this.tableName,
+        Key: { [this.aliasAttr]: userHandle },
+        ProjectionExpression: "follower_count",
+      })
+    );
+
+    return data.Item?.follower_count ?? 0;
+  }
+
+  public async decrementFollowCounts(
+    followerHandle: string,
+    followeeHandle: string
+  ): Promise<void> {
+    await this.client.send(
+      new UpdateCommand({
+        TableName: this.tableName,
+        Key: { [this.aliasAttr]: followerHandle },
+        UpdateExpression: "ADD followee_count :dec",
+        ExpressionAttributeValues: { ":dec": -1 },
+      })
+    );
+
+    await this.client.send(
+      new UpdateCommand({
+        TableName: this.tableName,
+        Key: { [this.aliasAttr]: followeeHandle },
+        UpdateExpression: "ADD follower_count :dec",
+        ExpressionAttributeValues: { ":dec": -1 },
+      })
+    );
+  }
+
+  public async incrementFollowCounts(
+    followerHandle: string,
+    followeeHandle: string
+  ): Promise<void> {
+    // Increment followee_count for the follower
+    await this.client.send(
+      new UpdateCommand({
+        TableName: this.tableName,
+        Key: { [this.aliasAttr]: followerHandle },
+        UpdateExpression: "ADD followee_count :inc",
+        ExpressionAttributeValues: { ":inc": 1 },
+      })
+    );
+
+    // Increment follower_count for the followee
+    await this.client.send(
+      new UpdateCommand({
+        TableName: this.tableName,
+        Key: { [this.aliasAttr]: followeeHandle },
+        UpdateExpression: "ADD follower_count :inc",
+        ExpressionAttributeValues: { ":inc": 1 },
+      })
+    );
   }
 }

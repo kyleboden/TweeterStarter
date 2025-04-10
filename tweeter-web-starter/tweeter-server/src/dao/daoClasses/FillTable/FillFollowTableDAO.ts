@@ -6,13 +6,13 @@ import {
   DynamoDBDocumentClient,
 } from "@aws-sdk/lib-dynamodb";
 
-export class FillPostTableDao {
+export class FillFollowTableDAO {
   //
   // Modify these values as needed to match your follow table.
   //
-  private readonly tableName = "tweeter_follow";
-  private readonly followerAliasAttribute = "follower_alias";
-  private readonly followeeAliasAttribute = "followee_alias";
+  private readonly tableName = "follows";
+  private readonly followerAliasAttribute = "follower_handle";
+  private readonly followeeAliasAttribute = "followee_handle";
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 

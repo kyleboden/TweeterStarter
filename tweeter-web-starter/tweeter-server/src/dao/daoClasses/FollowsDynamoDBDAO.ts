@@ -6,7 +6,7 @@ import {
   QueryCommand,
   UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBClient, Select } from "@aws-sdk/client-dynamodb";
 import { FollowEntity } from "../entity/FollowEntity";
 import { DataPage } from "../entity/DataPage";
 import { FollowsDAO } from "../daoInterfaces/FollowsDAO";
@@ -18,6 +18,8 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
   readonly followerHandleAttr = "follower_handle";
   readonly followeeNameAttr = "followee_name";
   readonly followeeHandleAttr = "followee_handle";
+
+  readonly userTableName = "users";
 
   private readonly client = DynamoDBDocumentClient.from(new DynamoDBClient());
 
@@ -147,34 +149,34 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
     return await this.executeFollowQuery(params);
   }
 
-  public async getAllFollowers(
-    followeeHandle: string
-  ): Promise<DataPage<FollowEntity>> {
-    const params = {
-      KeyConditionExpression: this.followeeHandleAttr + " = :fol",
-      ExpressionAttributeValues: {
-        ":fol": followeeHandle,
-      },
-      TableName: this.tableName,
-      IndexName: this.indexName,
-    };
+  // public async getAllFollowers(
+  //   followeeHandle: string
+  // ): Promise<DataPage<FollowEntity>> {
+  //   const params = {
+  //     KeyConditionExpression: this.followeeHandleAttr + " = :fol",
+  //     ExpressionAttributeValues: {
+  //       ":fol": followeeHandle,
+  //     },
+  //     TableName: this.tableName,
+  //     IndexName: this.indexName,
+  //   };
 
-    return await this.executeFollowQuery(params);
-  }
+  //   return await this.executeFollowQuery(params);
+  // }
 
-  public async getAllFollowees(
-    followerHandle: string
-  ): Promise<DataPage<FollowEntity>> {
-    const params = {
-      KeyConditionExpression: this.followerHandleAttr + " = :f",
-      ExpressionAttributeValues: {
-        ":f": followerHandle,
-      },
-      TableName: this.tableName,
-    };
+  // public async getAllFollowees(
+  //   followerHandle: string
+  // ): Promise<DataPage<FollowEntity>> {
+  //   const params = {
+  //     KeyConditionExpression: this.followerHandleAttr + " = :f",
+  //     ExpressionAttributeValues: {
+  //       ":f": followerHandle,
+  //     },
+  //     TableName: this.tableName,
+  //   };
 
-    return await this.executeFollowQuery(params);
-  }
+  //   return await this.executeFollowQuery(params);
+  // }
 
   private async executeFollowQuery(
     params: any
@@ -194,4 +196,98 @@ export class FollowsDynamoDBDAO implements FollowsDAO {
 
     return new DataPage<FollowEntity>(items, hasMorePages);
   }
+
+  // public async getFolloweeCount(followerHandle: string): Promise<number> {
+  //   const params = {
+  //     KeyConditionExpression: this.followerHandleAttr + " = :f",
+  //     ExpressionAttributeValues: {
+  //       ":f": followerHandle,
+  //     },
+  //     TableName: this.tableName,
+  //     Select: Select.COUNT, // ✅ use the enum instead of plain string
+  //   };
+
+  //   const data = await this.client.send(new QueryCommand(params));
+  //   return data.Count ?? 0;
+  // }
+
+  // public async getFollowerCount(followeeHandle: string): Promise<number> {
+  //   const params = {
+  //     KeyConditionExpression: this.followeeHandleAttr + " = :f",
+  //     ExpressionAttributeValues: {
+  //       ":f": followeeHandle,
+  //     },
+  //     TableName: this.tableName,
+  //     Select: Select.COUNT, // ✅ use the enum instead of plain string
+  //   };
+
+  //   const data = await this.client.send(new QueryCommand(params));
+  //   return data.Count ?? 0;
+  // }
+
+  // async getFolloweeCount(userHandle: string): Promise<number> {
+  //   const data = await this.client.send(
+  //     new GetCommand({
+  //       TableName: this.userTableName,
+  //       Key: [this.al],
+  //       ProjectionExpression: "followee_count",
+  //     })
+  //   );
+
+  //   return data.Item?.followee_count ?? 0;
+  // }
+
+  // async getFollowerCount(userHandle: string): Promise<number> {
+  //   const data = await this.client.send(
+  //     new GetCommand({
+  //       TableName: this.userTableName,
+  //       Key: { userHandle },
+  //       ProjectionExpression: "follower_count",
+  //     })
+  //   );
+
+  //   return data.Item?.follower_count ?? 0;
+  // }
+
+  // async decrementFollowCounts(followerHandle: string, followeeHandle: string): Promise<void> {
+  //   await this.client.send(
+  //     new UpdateCommand({
+  //       TableName: this.userTableName,
+  //       Key: { userHandle: followerHandle },
+  //       UpdateExpression: "ADD followee_count :dec",
+  //       ExpressionAttributeValues: { ":dec": -1 },
+  //     })
+  //   );
+
+  //   await this.client.send(
+  //     new UpdateCommand({
+  //       TableName: this.userTableName,
+  //       Key: { userHandle: followeeHandle },
+  //       UpdateExpression: "ADD follower_count :dec",
+  //       ExpressionAttributeValues: { ":dec": -1 },
+  //     })
+  //   );
+  // }
+
+  // async incrementFollowCounts(followerHandle: string, followeeHandle: string): Promise<void> {
+  //   // Increment followee_count for the follower
+  //   await this.client.send(
+  //     new UpdateCommand({
+  //       TableName: this.userTableName,
+  //       Key: { userHandle: followerHandle },
+  //       UpdateExpression: "ADD followee_count :inc",
+  //       ExpressionAttributeValues: { ":inc": 1 },
+  //     })
+  //   );
+
+  //   // Increment follower_count for the followee
+  //   await this.client.send(
+  //     new UpdateCommand({
+  //       TableName: this.userTableName,
+  //       Key: { userHandle: followeeHandle },
+  //       UpdateExpression: "ADD follower_count :inc",
+  //       ExpressionAttributeValues: { ":inc": 1 },
+  //     })
+  //   );
+  // }
 }

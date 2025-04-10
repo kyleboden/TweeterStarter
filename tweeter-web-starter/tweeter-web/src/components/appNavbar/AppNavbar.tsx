@@ -27,7 +27,7 @@ const AppNavbar = (props: Props) => {
 
   const [presenter] = useState(props.presenterGenerator(listener));
 
-  console.log("token in appnavbar: ", authToken);
+  // console.log("token in appnavbar: ", authToken);
   const logOut = async () => await presenter.logOut(authToken!);
 
   return (

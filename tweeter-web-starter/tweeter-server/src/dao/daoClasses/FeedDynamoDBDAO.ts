@@ -133,18 +133,20 @@ export class FeedDynamoDBDAO implements FeedDAO {
       TableName: this.tableName,
       KeyConditionExpression: `${this.aliasAttr} = :s`,
       ExpressionAttributeValues: {
-        ":s": { S: alias }, // ✅ Wrap alias as an AWS string attribute
+        ":s": { S: alias },
       },
       Limit: pageSize,
-      ScanIndexForward: false, // ✅ Ensures most recent status appear first
+      ScanIndexForward: false,
       ExclusiveStartKey:
         timestamp === undefined
           ? undefined
           : {
-              [this.aliasAttr]: { S: alias }, // ✅ Wrap alias as an AWS string
-              [this.timeStampAttr]: { N: timestamp.toString() }, // ✅ Convert number to AWS number
+              [this.aliasAttr]: { S: alias },
+              [this.timeStampAttr]: { S: timestamp.toString() },
             },
     };
+    console.log("printing params in getPageOfFeeds: ", params);
+
     const data = await this.executeFeedQuery(params);
     return data;
   }

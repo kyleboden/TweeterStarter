@@ -51,7 +51,7 @@ export class StoryDynamoDBDAO implements StoryDAO {
           ? undefined
           : {
               [this.aliasAttr]: { S: alias }, // ✅ Wrap alias as an AWS string
-              [this.timestampAttr]: { N: timestamp.toString() }, // ✅ Convert number to AWS number
+              [this.timestampAttr]: { S: timestamp.toString() }, // ✅ Convert number to AWS number
             },
     };
 

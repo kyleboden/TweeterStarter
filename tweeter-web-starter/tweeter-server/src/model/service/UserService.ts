@@ -55,8 +55,11 @@ export class UserService {
       throw new Error("Error authenticating, please login again");
     }
 
-    const followees = await this.followsDao.getAllFollowees(user.alias);
-    return followees.values.length;
+    // const followees = await this.followsDao.getAllFollowees(user.alias);
+    const followeesCount = await this.userDao.getFolloweeCount(user.alias);
+
+    // return followees.values.length;
+    return followeesCount;
   }
 
   public async getFollowerCount(token: string, user: UserDto): Promise<number> {
@@ -65,8 +68,11 @@ export class UserService {
       throw new Error("Error authenticating, please login again");
     }
 
-    const followers = await this.followsDao.getAllFollowers(user.alias);
-    return followers.values.length;
+    // const followers = await this.followsDao.getAllFollowers(user.alias);
+    // return followers.values.length;
+
+    const followersCount = await this.userDao.getFollowerCount(user.alias);
+    return followersCount;
   }
 
   public async follow(
@@ -88,7 +94,9 @@ export class UserService {
       followeeName: userToFollow.firstName,
       followeeHandle: userToFollow.alias,
     };
-    this.followsDao.putFollower(followEntity);
+    await this.followsDao.putFollower(followEntity);
+
+    await this.userDao.incrementFollowCounts(followerAlias, userToFollow.alias);
 
     const followerCount = await this.getFollowerCount(token, userToFollow);
     const followeeCount = await this.getFolloweeCount(token, userToFollow);
@@ -115,7 +123,12 @@ export class UserService {
       followeeName: userToUnfollow.firstName,
       followeeHandle: userToUnfollow.alias,
     };
-    this.followsDao.deleteFollower(followEntity);
+    await this.followsDao.deleteFollower(followEntity);
+
+    await this.userDao.decrementFollowCounts(
+      followerAlias,
+      userToUnfollow.alias
+    );
 
     const followerCount = await this.getFollowerCount(token, userToUnfollow);
     const followeeCount = await this.getFolloweeCount(token, userToUnfollow);
@@ -181,6 +194,8 @@ export class UserService {
       password: hashedPassword,
       firstName,
       lastName,
+      followeeCount: 0,
+      followerCount: 0,
     };
 
     await this.userDao.putUser(userEntity);

@@ -25,7 +25,9 @@ export interface FollowsDAO {
     lastFollowerHandle: string | undefined
   ): Promise<DataPage<FollowEntity>>;
 
-  getAllFollowers(followeeHandle: string): Promise<DataPage<FollowEntity>>;
+  // getAllFollowers(followeeHandle: string): Promise<DataPage<FollowEntity>>;
 
-  getAllFollowees(followerHandle: string): Promise<DataPage<FollowEntity>>;
+  // getAllFollowees(followerHandle: string): Promise<DataPage<FollowEntity>>;
+
+
 }
